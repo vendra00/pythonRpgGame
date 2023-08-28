@@ -1,5 +1,6 @@
 from enum import Enum, auto
 
+
 class Items(Enum):
     GOLD = auto()
     SWORD = auto()
