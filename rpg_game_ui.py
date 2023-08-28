@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import messagebox
 from typing import List, Union
 from PIL import Image, ImageTk
-from models import Hero, Wall, TILE_SIZE, MAP_SIZE, Tree
+from models import Hero, Wall, TILE_SIZE, MAP_SIZE, Tree, TreasureChest
 
 
 class RPGGame(tk.Frame):
@@ -27,10 +27,11 @@ class RPGGame(tk.Frame):
         self.hero_pos = None
         self.map = None
 
-        # Create hero instance
+        # Create Objects instance
         self.hero = Hero(name="Sir Lancelot")
         self.tree = Tree()
         self.wall = Wall()
+        self.treasure_chest = TreasureChest()
 
         # Initialize and draw the map
         self.create_widgets()
@@ -50,6 +51,10 @@ class RPGGame(tk.Frame):
         tree = Tree()
         self.map[3][4] = tree
 
+        treasure_chest = TreasureChest()
+        self.map[6][1] = treasure_chest
+        print(treasure_chest.item)
+
         wall = Wall()
         for i in range(0, 10):  # This creates a vertical wall from (2,2) to (2,7)
             self.map[i][0] = wall
@@ -57,7 +62,7 @@ class RPGGame(tk.Frame):
     def draw_map(self):
         self.canvas.delete("all")  # Clear the canvas before redrawing
 
-        hero_image, tree_image, wall_image = self.draw_map_elements()
+        hero_image, tree_image, wall_image, treasure_chest_image = self.draw_map_elements()
 
         for y, row in enumerate(self.map):
             for x, tile in enumerate(row):
@@ -67,6 +72,8 @@ class RPGGame(tk.Frame):
                     self.canvas.create_image(x * TILE_SIZE, y * TILE_SIZE, anchor=tk.NW, image=tree_image)
                 elif isinstance(tile, Wall):
                     self.canvas.create_image(x * TILE_SIZE, y * TILE_SIZE, anchor=tk.NW, image=wall_image)
+                elif isinstance(tile, TreasureChest):
+                    self.canvas.create_image(x * TILE_SIZE, y * TILE_SIZE, anchor=tk.NW, image=treasure_chest_image)
                 else:
                     color = 'white'
                     self.canvas.create_rectangle(x * TILE_SIZE, y * TILE_SIZE,
@@ -77,7 +84,8 @@ class RPGGame(tk.Frame):
         hero_image = self.draw_hero()
         tree_image = self.draw_tree()
         wall_image = self.draw_wall()
-        return hero_image, tree_image, wall_image
+        treasure_chest_image = self.draw_treasure_chest()
+        return hero_image, tree_image, wall_image, treasure_chest_image
 
     def draw_wall(self):
         wall_pil_image = Image.open(self.wall.image_path)
@@ -92,6 +100,13 @@ class RPGGame(tk.Frame):
         tree_image = ImageTk.PhotoImage(tree_pil_image)  # Convert PIL image to Tkinter PhotoImage
         self.canvas.tree_image = tree_image  # Store a reference to avoid garbage collection
         return tree_image
+
+    def draw_treasure_chest(self):
+        treasure_chest_pil_image = Image.open(self.treasure_chest.image_path)
+        treasure_chest_pil_image = treasure_chest_pil_image.resize((TILE_SIZE, TILE_SIZE),3)
+        treasure_chest_image = ImageTk.PhotoImage(treasure_chest_pil_image)
+        self.canvas.treasure_chest_image = treasure_chest_image
+        return treasure_chest_image
 
     def draw_hero(self):
         hero_pil_image = Image.open(self.hero.image_path)

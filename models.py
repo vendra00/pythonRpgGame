@@ -1,4 +1,7 @@
 # models.py
+import random
+
+from enums import Items
 
 TILE_SIZE = 50
 MAP_SIZE = 10
@@ -66,3 +69,9 @@ class Wall:
 class Tree:
     def __init__(self):
         self.image_path = './images/tree.png'
+
+
+class TreasureChest:
+    def __init__(self):
+        self.image_path = './images/treasure-chest.jpg'
+        self.item = random.choice(list(Items))
