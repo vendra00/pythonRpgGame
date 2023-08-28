@@ -29,6 +29,8 @@ class RPGGame(tk.Frame):
 
         # Create hero instance
         self.hero = Hero(name="Sir Lancelot")
+        self.tree = Tree()
+        self.wall = Wall()
 
         # Initialize and draw the map
         self.create_widgets()
@@ -49,36 +51,54 @@ class RPGGame(tk.Frame):
         self.map[3][4] = tree
 
         wall = Wall()
-        for i in range(2, 8):  # This creates a vertical wall from (2,2) to (2,7)
-            self.map[i][2] = wall
+        for i in range(0, 10):  # This creates a vertical wall from (2,2) to (2,7)
+            self.map[i][0] = wall
 
     def draw_map(self):
         self.canvas.delete("all")  # Clear the canvas before redrawing
 
-        pil_image = Image.open(self.hero.image_path)  # Using PIL to open the image
-        pil_image = pil_image.resize((TILE_SIZE, TILE_SIZE), 3)  # Resize the image to fit the tile size
-        hero_image = ImageTk.PhotoImage(pil_image)  # Convert PIL image to Tkinter PhotoImage
-        self.canvas.hero_image = hero_image  # Store a reference to avoid garbage collection
+        hero_image, tree_image, wall_image = self.draw_map_elements()
 
         for y, row in enumerate(self.map):
             for x, tile in enumerate(row):
                 if isinstance(tile, Hero):
                     self.canvas.create_image(x * TILE_SIZE, y * TILE_SIZE, anchor=tk.NW, image=hero_image)
                 elif isinstance(tile, Tree):
-                    color = 'green'
-                    self.canvas.create_rectangle(x * TILE_SIZE, y * TILE_SIZE,
-                                                 (x + 1) * TILE_SIZE, (y + 1) * TILE_SIZE,
-                                                 fill=color)
+                    self.canvas.create_image(x * TILE_SIZE, y * TILE_SIZE, anchor=tk.NW, image=tree_image)
                 elif isinstance(tile, Wall):
-                    color = 'gray'
-                    self.canvas.create_rectangle(x * TILE_SIZE, y * TILE_SIZE,
-                                                 (x + 1) * TILE_SIZE, (y + 1) * TILE_SIZE,
-                                                 fill=color)
+                    self.canvas.create_image(x * TILE_SIZE, y * TILE_SIZE, anchor=tk.NW, image=wall_image)
                 else:
                     color = 'white'
                     self.canvas.create_rectangle(x * TILE_SIZE, y * TILE_SIZE,
                                                  (x + 1) * TILE_SIZE, (y + 1) * TILE_SIZE,
                                                  fill=color)
+
+    def draw_map_elements(self):
+        hero_image = self.draw_hero()
+        tree_image = self.draw_tree()
+        wall_image = self.draw_wall()
+        return hero_image, tree_image, wall_image
+
+    def draw_wall(self):
+        wall_pil_image = Image.open(self.wall.image_path)
+        wall_pil_image = wall_pil_image.resize((TILE_SIZE, TILE_SIZE), 3)
+        wall_image = ImageTk.PhotoImage(wall_pil_image)
+        self.canvas.wall_image = wall_image
+        return wall_image
+
+    def draw_tree(self):
+        tree_pil_image = Image.open(self.tree.image_path)  # Using PIL to open the image
+        tree_pil_image = tree_pil_image.resize((TILE_SIZE, TILE_SIZE), 3)  # Resize the image to fit the tile size
+        tree_image = ImageTk.PhotoImage(tree_pil_image)  # Convert PIL image to Tkinter PhotoImage
+        self.canvas.tree_image = tree_image  # Store a reference to avoid garbage collection
+        return tree_image
+
+    def draw_hero(self):
+        hero_pil_image = Image.open(self.hero.image_path)
+        hero_pil_image = hero_pil_image.resize((TILE_SIZE, TILE_SIZE), 3)
+        hero_image = ImageTk.PhotoImage(hero_pil_image)
+        self.canvas.hero_image = hero_image
+        return hero_image
 
     def move_hero(self, dx, dy):
         # Get the hero's current position.

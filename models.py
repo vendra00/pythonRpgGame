@@ -60,9 +60,9 @@ class Hero:
 
 class Wall:
     def __init__(self):
-        self.symbol = 'W'
+        self.image_path = './images/wall.jpg'
 
 
 class Tree:
     def __init__(self):
-        self.symbol = 'T'
+        self.image_path = './images/tree.png'
