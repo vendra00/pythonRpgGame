@@ -81,20 +81,22 @@ class RPGGame(tk.Frame):
                                                  fill=color)
 
     def move_hero(self, dx, dy):
+        # Get the hero's current position.
         x, y = self.hero.position
-        new_x, new_y = x + dx, y + dy
-        print(f"Trying to move from ({x}, {y}) to ({new_x}, {new_y})")
 
+        # Calculate the hero's intended new position.
+        new_x, new_y = x + dx, y + dy
+
+        # Check if the new position is within the map boundaries.
         if 0 <= new_x < len(self.map[0]) and 0 <= new_y < len(self.map):
-            print(f"New position is within boundaries")
+            # Check if the destination tile is passable.
             if self.is_passable(new_x, new_y):
-                print("New position is passable")
+                # Clear the old position of the hero on the map.
+                self.map[y][x] = '.'
+                # Set the new position of the hero on the map.
                 self.hero.position = (new_x, new_y)
-                self.draw_map()
-            else:
-                print("New position is blocked")
-        else:
-            print("New position is outside the boundaries")
+                self.map[new_y][new_x] = self.hero
+                self.draw_map()  # Redraw the map to reflect the new hero position.
 
     def is_passable(self, x, y):
         return not isinstance(self.map[y][x], (Wall, Tree))
