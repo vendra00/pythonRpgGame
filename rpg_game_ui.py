@@ -122,16 +122,32 @@ class RPGGame(tk.Frame):
         # Calculate the hero's intended new position.
         new_x, new_y = x + dx, y + dy
 
-        # Check if the new position is within the map boundaries.
-        if 0 <= new_x < len(self.map[0]) and 0 <= new_y < len(self.map):
-            # Check if the destination tile is passable.
-            if self.is_passable(new_x, new_y):
-                # Clear the old position of the hero on the map.
-                self.map[y][x] = '.'
-                # Set the new position of the hero on the map.
-                self.hero.position = (new_x, new_y)
-                self.map[new_y][new_x] = self.hero
-                self.draw_map()  # Redraw the map to reflect the new hero position.
+        # Check if the hero is moving onto a treasure chest tile
+        self.check_item_pick_up(new_x, new_y)
+
+        # Check if the new position is within the map boundaries and is passable
+        self.check_map_collision(new_x, new_y, x, y)
+
+    def check_item_pick_up(self, new_x, new_y):
+        if isinstance(self.map[new_y][new_x], TreasureChest):
+            # Add the item from the treasure chest to the hero's inventory
+            chest: TreasureChest = self.map[new_y][new_x]
+            self.hero.inventory.append(chest.item)
+
+            # Clear the treasure chest tile (replace with '.')
+            self.map[new_y][new_x] = '.'
+
+            # (Optional) Display a message to the player
+            messagebox.showinfo("Item Collected", f"You've collected a {chest.item}!")
+
+    def check_map_collision(self, new_x, new_y, x, y):
+        if 0 <= new_x < len(self.map[0]) and 0 <= new_y < len(self.map) and self.is_passable(new_x, new_y):
+            # Clear the old position of the hero on the map.
+            self.map[y][x] = '.'
+            # Set the new position of the hero on the map.
+            self.hero.position = (new_x, new_y)
+            self.map[new_y][new_x] = self.hero
+            self.draw_map()  # Redraw the map to reflect the new hero position.
 
     def is_passable(self, x, y):
         return not isinstance(self.map[y][x], (Wall, Tree))
@@ -206,6 +222,17 @@ class RPGGame(tk.Frame):
     def battle():
         messagebox.showinfo("Battle", "A wild enemy appears!")
 
-    @staticmethod
-    def inventory():
-        messagebox.showinfo("Inventory", "You check your items...")
+    def inventory(self):
+        # Create a new window for the inventory
+        inventory_window = tk.Toplevel(self)
+        inventory_window.title("Inventory")
+
+        # Loop through the hero's inventory and display each item
+        for idx, item in enumerate(self.hero.inventory, start=1):
+            item_label = tk.Label(inventory_window, text=f"{idx}. {item}")
+            item_label.pack(pady=2)
+
+        # If the inventory is empty
+        if not self.hero.inventory:
+            empty_label = tk.Label(inventory_window, text="Your inventory is empty.")
+            empty_label.pack(pady=10)
