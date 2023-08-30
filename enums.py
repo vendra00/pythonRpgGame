@@ -45,9 +45,9 @@ class Accessories(Enum):
 
 class Items(Enum):
     WEAPONS = (Weapons, "Weapons")
-    ARMOR = (Armor, "Armor")
-    CONSUMABLES = (Consumables, "Consumables")
-    ACCESSORIES = (Accessories, "Accessories")
+    #ARMOR = (Armor, "Armor")
+    #CONSUMABLES = (Consumables, "Consumables")
+    #ACCESSORIES = (Accessories, "Accessories")
 
     # Add more items as needed
 

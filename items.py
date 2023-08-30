@@ -44,7 +44,10 @@ class Weapon(Equipment, ABC):
 class Blade(Weapon, ABC):
     sharpness: int
     length: int
-    thumbnail_path: str = './images/thumbnails/blade.jpg'
+
+    def __post_init__(self):
+        if not self.thumbnail_path:
+            self.thumbnail_path = './images/thumbnails/blade.jpg'
 
     def sharpen(self):
         pass
@@ -52,14 +55,20 @@ class Blade(Weapon, ABC):
 
 @dataclass
 class Blunt(Weapon, ABC):
-    spike_length: int
-    thumbnail_path: str = './images/thumbnails/blunt.png'
+    spike_length: int = 0
+
+    def __post_init__(self):
+        if not self.thumbnail_path:
+            self.thumbnail_path = './images/thumbnails/blunt.png'
 
 
 @dataclass
 class Ranged(Weapon, ABC):
     ammo_type: AmmoType
-    thumbnail_path: str = './images/thumbnails/ranged.png'
+
+    def __post_init__(self):
+        if not self.thumbnail_path:
+            self.thumbnail_path = './images/thumbnails/ranged.png'
 
     def shoot(self):
         pass

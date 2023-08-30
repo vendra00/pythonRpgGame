@@ -3,8 +3,10 @@ from tkinter import messagebox
 from typing import List, Union
 from PIL import Image, ImageTk
 
+from id_generator import IDGenerator
 from characters import Hero, MAP_SIZE, TILE_SIZE
 from environment import TreasureChest, Tree, Wall
+from item_attributes import ITEM_ATTRIBUTES, BASE_ITEM_ATTRIBUTES
 
 
 class RPGGame(tk.Frame):
@@ -125,15 +127,33 @@ class RPGGame(tk.Frame):
 
     def check_item_pick_up(self, new_x, new_y):
         if isinstance(self.map[new_y][new_x], TreasureChest):
-            # Add the item from the treasure chest to the hero's inventory
+            # Convert the enum item from the treasure chest to a real item object
             chest: TreasureChest = self.map[new_y][new_x]
-            self.hero.inventory.append(chest.item)
+            actual_item = self.create_item_from_enum(chest.item)  # Use self to reference class methods
+            self.hero.inventory.append(actual_item)
 
             # Clear the treasure chest tile (replace with '.')
             self.map[new_y][new_x] = '.'
 
             # (Optional) Display a message to the player
-            messagebox.showinfo("Item Collected", f"You've collected a {chest.item.name}!")
+            messagebox.showinfo("Item Collected", f"You've collected a {actual_item.name}!")
+
+    @staticmethod
+    def create_item_from_enum(weapon_enum):
+        item_attributes = ITEM_ATTRIBUTES.get(weapon_enum)
+        id_generator = IDGenerator()
+
+        if not item_attributes:
+            raise ValueError(f"Invalid weapon_enum: {weapon_enum}")
+
+        # Create a new item with a unique ID
+        combined_attributes = BASE_ITEM_ATTRIBUTES.copy()
+        combined_attributes['item_id'] = id_generator.generate_id()
+        combined_attributes.update(item_attributes)
+
+        # Extract the class reference and then remove it from the dictionary
+        item_class = combined_attributes.pop('class')
+        return item_class(**combined_attributes)
 
     def check_map_collision(self, new_x, new_y, x, y):
         if 0 <= new_x < len(self.map[0]) and 0 <= new_y < len(self.map) and self.is_passable(new_x, new_y):
@@ -221,15 +241,20 @@ class RPGGame(tk.Frame):
         # Create a new window for the inventory
         inventory_window = tk.Toplevel(self)
         inventory_window.title("Inventory")
+        print(self.hero.inventory)
 
         # Loop through the hero's inventory and display each item
         for idx, item in enumerate(self.hero.inventory, start=1):
-            item_label = tk.Label(inventory_window, text=f"{idx}. {item.name} - {item.description}")
+            item_label = tk.Label(inventory_window, text=f"{idx}. "
+                                                         f"Name: {item.name} - "
+                                                         f"Rarity: {item.rarity.name} - "
+                                                         f"Value: {item.value}")
             item_label.pack(pady=2)
 
             # Adding a "Use" button for each item
-            use_button = tk.Button(inventory_window, text="Use", command=lambda i=item: self.use_item(i))
-            use_button.pack(pady=2)
+            # use_button = tk.Button(inventory_window, text="Use", command=lambda item=item: self.use_item(item))
+
+            # use_button.pack(pady=2)
 
         # If the inventory is empty
         if not self.hero.inventory:
@@ -240,4 +265,4 @@ class RPGGame(tk.Frame):
         if item.use_function:
             item.use_function(self.hero)  # Assuming the function expects a hero as an argument
             self.hero.inventory.remove(item)  # Remove the used item from inventory
-            self.inventory()  # Refresh the inventory window
+            self.inventory()

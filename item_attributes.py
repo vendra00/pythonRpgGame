@@ -1,5 +1,15 @@
-from enums import Weapons, AmmoType
+from id_generator import IDGenerator
+from enums import Weapons, AmmoType, Rarity
 from items import Sword, Axe, Shield, Bow, Mace, Dagger, Staff, Wand, Crossbow, Halberd, Hammer
+
+
+BASE_ITEM_ATTRIBUTES = {
+    'name': 'Default Name',  # same here, you'd probably want a more dynamic approach
+    'rarity': Rarity.COMMON,  # assuming you have a COMMON value in your Rarity enum
+    'weight': 1,
+    'thumbnail_path': './default/path.jpg',
+    'durability': 100
+}
 
 ITEM_ATTRIBUTES = {
     Weapons.SWORD: {
@@ -27,7 +37,7 @@ ITEM_ATTRIBUTES = {
     Weapons.SHIELD: {
         "class": Shield,
         "value": 30,
-        "image_path": './images/item/weapons/shield.png',
+        "image_path": './images/item/weapons/shield.jpg',
         "slot": 'off_hand',
         "attack_power": 0,
         "defense_power": 10,
@@ -51,7 +61,7 @@ ITEM_ATTRIBUTES = {
         "image_path": './images/items/weapons/mace.png',
         "slot": 'main_hand',
         "attack_power": 12,
-        "range_": 1,
+        "weapon_range": 1,
         "spike_length": 5
     },
 
@@ -69,10 +79,10 @@ ITEM_ATTRIBUTES = {
     Weapons.STAFF: {
         "class": Staff,
         "value": 25,
-        "image_path": './images/items/weapons/staff.png',
+        "image_path": './images/items/weapons/staff.jpg',
         "slot": 'main_hand',
         "attack_power": 5,
-        "range_": 2
+        "weapon_range": 2
     },
 
     Weapons.WAND: {
@@ -81,7 +91,7 @@ ITEM_ATTRIBUTES = {
         "image_path": './images/items/weapons/wand.png',
         "slot": 'main_hand',
         "attack_power": 8,
-        "range_": 3
+        "weapon_range": 3
     },
 
     Weapons.CROSSBOW: {
@@ -98,11 +108,11 @@ ITEM_ATTRIBUTES = {
     Weapons.HALBERD: {
         "class": Halberd,
         "value": 50,
-        "image_path": './images/items/weapons/halberd.png',
+        "image_path": './images/items/weapons/halberd.jpg',
         "slot": 'main_hand',
         "attack_power": 16,
-        "range_": 2,
         "blade_length": 15,
+        "weapon_range": 2,
         "sharpness": 10
     },
 
@@ -112,6 +122,6 @@ ITEM_ATTRIBUTES = {
         "image_path": './images/items/weapons/hammer.png',
         "slot": 'main_hand',
         "attack_power": 14,
-        "range_": 1
+        "weapon_range": 1
     }
 }
