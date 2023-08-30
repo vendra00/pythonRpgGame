@@ -30,6 +30,7 @@ class Armor(Enum):
     LEGGINGS = auto()
     BOOTS = auto()
     GLOVES = auto()
+    SHOULDER_PADS = auto()
 
 
 class Accessories(Enum):
@@ -39,6 +40,7 @@ class Accessories(Enum):
     CAPE = auto()
     CLOAK = auto()
     BRACERS = auto()
+    EARRINGS = auto()
 
 
 class Items(Enum):
@@ -64,3 +66,32 @@ class Rarity(Enum):
     def __init__(self, name, color):
         self._name_ = name
         self.color = color
+
+
+class Effects(Enum):
+    POISON = auto()
+    BURN = auto()
+    BLEED = auto()
+    STUN = auto()
+    SLOW = auto()
+    CONFUSE = auto()
+    FEAR = auto()
+    SLEEP = auto()
+    CHARM = auto()
+    BLIND = auto()
+    SILENCE = auto()
+    ROOT = auto()
+    KNOCKBACK = auto()
+    KNOCKDOWN = auto()
+    DISARM = auto()
+    FREEZE = auto()
+    PETRIFY = auto()
+    CURSE = auto()
+    HEX = auto()
+    BANISH = auto()
+    BLESS = auto()
+    HEAL = auto()
+    REGENERATE = auto()
+
+
+
