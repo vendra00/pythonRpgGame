@@ -48,6 +48,7 @@ class Items(Enum):
     ARMOR = (Armor, "Armor")
     CONSUMABLES = (Consumables, "Consumables")
     ACCESSORIES = (Accessories, "Accessories")
+
     # Add more items as needed
 
     def __init__(self, item_enum, name):
@@ -94,4 +95,6 @@ class Effects(Enum):
     REGENERATE = auto()
 
 
-
+class AmmoType(Enum):
+    ARROW = auto()
+    BOLT = auto()

@@ -1,7 +1,7 @@
 from abc import ABC
 from dataclasses import dataclass
 
-from enums import Rarity, Effects
+from enums import Rarity, Effects, AmmoType
 
 
 @dataclass
@@ -52,14 +52,23 @@ class Blade(Weapon, ABC):
 
 @dataclass
 class Blunt(Weapon, ABC):
+    spike_length: int
     thumbnail_path: str = './images/thumbnails/blunt.png'
+
+
+@dataclass
+class Ranged(Weapon, ABC):
+    ammo_type: AmmoType
+    thumbnail_path: str = './images/thumbnails/ranged.png'
+
+    def shoot(self):
+        pass
 
 
 @dataclass
 class Shield(Weapon, ABC):
     block_power: int
     block_chance: int
-    image_path: str = './images/shield.png'
 
     def block(self):
         pass
@@ -67,17 +76,52 @@ class Shield(Weapon, ABC):
 
 @dataclass
 class Sword(Blade, ABC):
-    image_path: str = './images/sword.png'
+    pass
 
 
 @dataclass
 class Axe(Blade, ABC):
-    image_path: str = './images/axe.png'
+    pass
 
 
 @dataclass
 class Mace(Blunt, ABC):
-    image_path: str = './images/item/mace.png'
+    pass
+
+
+@dataclass
+class Bow(Ranged, ABC):
+    pass
+
+
+@dataclass
+class Crossbow(Ranged, ABC):
+    pass
+
+
+@dataclass
+class Dagger(Blade, ABC):
+    pass
+
+
+@dataclass
+class Halberd(Weapon, ABC):
+    pass
+
+
+@dataclass
+class Hammer(Blunt, ABC):
+    pass
+
+
+@dataclass
+class Staff(Blunt, ABC):
+    pass
+
+
+@dataclass
+class Wand(Blunt, ABC):
+    pass
 
 
 @dataclass
