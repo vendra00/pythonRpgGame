@@ -11,76 +11,82 @@ class RPGGame(tk.Frame):
     def __init__(self, master=None):
         super().__init__(master)
 
-        self.master = master
+        # Define the instance attributes
+        self.down_button = None
+        self.right_button = None
+        self.canvas = None
+        self.up_button = None
+        self.left_button = None
+        self.exit_button = None
+        self.inventory_button = None
+        self.wall = None
+        self.tree = None
+        self.explore_button = None
+        self.treasure_chest = None
+        self.battle_button = None
+        self.hero = None
+        self.map = None
+        self.elements = None
+
+        assert isinstance(self.master, tk.Tk)
         self.master.title("Fantasy RPG Game")
         self.pack()
 
         # Initialize attributes
-        self.intro_label = None
-        self.canvas = None
-        self.explore_button = None
-        self.battle_button = None
-        self.inventory_button = None
-        self.exit_button = None
-        self.up_button = None
-        self.down_button = None
-        self.right_button = None
-        self.left_button = None
-        self.hero_pos = None
-        self.map = None
-
-        # Create Objects instance
-        self.hero = Hero(name="Sir Lancelot")
-        self.tree = Tree()
-        self.wall = Wall()
-        self.treasure_chest = TreasureChest()
-
-        # Initialize and draw the map
+        self.initialize_attributes()
         self.create_widgets()
         self.initialize_map()
         self.draw_map()
 
-        self.map[self.hero.position[1]][self.hero.position[0]] = self.hero
+    def initialize_attributes(self):
+        """ Initialize class attributes """
+        self.hero = Hero(name="Sir Lancelot")
+        self.map: List[List[Union[str, Hero]]] = [['.' for _ in range(MAP_SIZE)] for _ in range(MAP_SIZE)]
+        self.elements = {
+            "hero": self.hero,
+            "tree": Tree(),
+            "wall": Wall(),
+            "treasure_chest": TreasureChest()
+        }
 
     def initialize_map(self):
-        # Create a 10x10 map with '.' as empty tiles
-        self.map: List[List[Union[str, Hero]]] = [['.' for _ in range(MAP_SIZE)] for _ in range(MAP_SIZE)]
-
+        """ Set the initial configuration of the map """
         # Place the hero at the center
         self.map[self.hero.position[1]][self.hero.position[0]] = self.hero
 
-        # Example obstacle: Place a tree 'T' at a specific position
-        tree = Tree()
-        self.map[3][4] = tree
-
-        treasure_chest = TreasureChest()
-        self.map[6][1] = treasure_chest
-        print(treasure_chest.item)
-
-        wall = Wall()
-        for i in range(0, 10):  # This creates a vertical wall from (2,2) to (2,7)
-            self.map[i][0] = wall
+        # Set obstacles and items
+        self.map[3][4] = self.elements["tree"]
+        self.map[6][1] = self.elements["treasure_chest"]
+        for i in range(MAP_SIZE):  # Vertical wall on the left side
+            self.map[i][0] = self.elements["wall"]
 
     def draw_map(self):
-        self.canvas.delete("all")  # Clear the canvas before redrawing
+        """ Draw the entire map on canvas """
+        self.canvas.delete("all")
 
-        hero_image, tree_image, wall_image, treasure_chest_image = self.draw_map_elements()
-
+        images = self.get_element_images()
         for y, row in enumerate(self.map):
             for x, tile in enumerate(row):
-                if isinstance(tile, Hero):
-                    self.canvas.create_image(x * TILE_SIZE, y * TILE_SIZE, anchor=tk.NW, image=hero_image)
-                elif isinstance(tile, Tree):
-                    self.canvas.create_image(x * TILE_SIZE, y * TILE_SIZE, anchor=tk.NW, image=tree_image)
-                elif isinstance(tile, Wall):
-                    self.canvas.create_image(x * TILE_SIZE, y * TILE_SIZE, anchor=tk.NW, image=wall_image)
-                elif isinstance(tile, TreasureChest):
-                    self.canvas.create_image(x * TILE_SIZE, y * TILE_SIZE, anchor=tk.NW, image=treasure_chest_image)
+                if tile in self.elements.values():
+                    self.canvas.create_image(x * TILE_SIZE, y * TILE_SIZE, anchor=tk.NW, image=images[tile])
                 else:
-                    color = 'white'
                     self.canvas.create_rectangle(x * TILE_SIZE, y * TILE_SIZE,
-                                                 (x + 1) * TILE_SIZE, (y + 1) * TILE_SIZE,
-                                                 fill=color)
+                                                 (x + 1) * TILE_SIZE, (y + 1) * TILE_SIZE, fill='white')
+
+    def get_element_images(self):
+        """ Load and return images for all map elements """
+        images = {}
+        for key, element in self.elements.items():
+            pil_image = Image.open(element.image_path).resize((TILE_SIZE, TILE_SIZE), 3)
+            images[element] = ImageTk.PhotoImage(pil_image)
+            setattr(self.canvas, f"{key}_image", images[element])
+        return images
+
+    def move_hero(self, dx, dy):
+        x, y = self.hero.position
+        new_x, new_y = x + dx, y + dy
+        self.check_item_pick_up(new_x, new_y)
+        self.check_map_collision(new_x, new_y, x, y)
 
     def draw_map_elements(self):
         hero_image = self.draw_hero()
@@ -116,19 +122,6 @@ class RPGGame(tk.Frame):
         hero_image = ImageTk.PhotoImage(hero_pil_image)
         self.canvas.hero_image = hero_image
         return hero_image
-
-    def move_hero(self, dx, dy):
-        # Get the hero's current position.
-        x, y = self.hero.position
-
-        # Calculate the hero's intended new position.
-        new_x, new_y = x + dx, y + dy
-
-        # Check if the hero is moving onto a treasure chest tile
-        self.check_item_pick_up(new_x, new_y)
-
-        # Check if the new position is within the map boundaries and is passable
-        self.check_map_collision(new_x, new_y, x, y)
 
     def check_item_pick_up(self, new_x, new_y):
         if isinstance(self.map[new_y][new_x], TreasureChest):
@@ -231,10 +224,20 @@ class RPGGame(tk.Frame):
 
         # Loop through the hero's inventory and display each item
         for idx, item in enumerate(self.hero.inventory, start=1):
-            item_label = tk.Label(inventory_window, text=f"{idx}. {item}")
+            item_label = tk.Label(inventory_window, text=f"{idx}. {item.name} - {item.description}")
             item_label.pack(pady=2)
+
+            # Adding a "Use" button for each item
+            use_button = tk.Button(inventory_window, text="Use", command=lambda i=item: self.use_item(i))
+            use_button.pack(pady=2)
 
         # If the inventory is empty
         if not self.hero.inventory:
             empty_label = tk.Label(inventory_window, text="Your inventory is empty.")
             empty_label.pack(pady=10)
+
+    def use_item(self, item):
+        if item.use_function:
+            item.use_function(self.hero)  # Assuming the function expects a hero as an argument
+            self.hero.inventory.remove(item)  # Remove the used item from inventory
+            self.inventory()  # Refresh the inventory window
