@@ -2,7 +2,9 @@ import tkinter as tk
 from tkinter import messagebox
 from typing import List, Union
 from PIL import Image, ImageTk
-from models import Hero, Wall, TILE_SIZE, MAP_SIZE, Tree, TreasureChest
+
+from characters import Hero, MAP_SIZE, TILE_SIZE
+from environment import TreasureChest, Tree, Wall
 
 
 class RPGGame(tk.Frame):
@@ -103,7 +105,7 @@ class RPGGame(tk.Frame):
 
     def draw_treasure_chest(self):
         treasure_chest_pil_image = Image.open(self.treasure_chest.image_path)
-        treasure_chest_pil_image = treasure_chest_pil_image.resize((TILE_SIZE, TILE_SIZE),3)
+        treasure_chest_pil_image = treasure_chest_pil_image.resize((TILE_SIZE, TILE_SIZE), 3)
         treasure_chest_image = ImageTk.PhotoImage(treasure_chest_pil_image)
         self.canvas.treasure_chest_image = treasure_chest_image
         return treasure_chest_image
@@ -138,7 +140,7 @@ class RPGGame(tk.Frame):
             self.map[new_y][new_x] = '.'
 
             # (Optional) Display a message to the player
-            messagebox.showinfo("Item Collected", f"You've collected a {chest.item}!")
+            messagebox.showinfo("Item Collected", f"You've collected a {chest.item.name}!")
 
     def check_map_collision(self, new_x, new_y, x, y):
         if 0 <= new_x < len(self.map[0]) and 0 <= new_y < len(self.map) and self.is_passable(new_x, new_y):
