@@ -1,4 +1,3 @@
-from id_generator import IDGenerator
 from enums import Weapons, AmmoType, Rarity
 from items import Sword, Axe, Shield, Bow, Mace, Dagger, Staff, Wand, Crossbow, Halberd, Hammer
 
@@ -61,6 +60,7 @@ ITEM_ATTRIBUTES = {
         "image_path": './images/items/weapons/mace.png',
         "slot": 'main_hand',
         "attack_power": 12,
+        "defense_power": 2,
         "weapon_range": 1,
         "spike_length": 5
     },
@@ -82,6 +82,7 @@ ITEM_ATTRIBUTES = {
         "image_path": './images/items/weapons/staff.jpg',
         "slot": 'main_hand',
         "attack_power": 5,
+        "defense_power": 3,
         "weapon_range": 2
     },
 
@@ -91,6 +92,7 @@ ITEM_ATTRIBUTES = {
         "image_path": './images/items/weapons/wand.png',
         "slot": 'main_hand',
         "attack_power": 8,
+        "defense_power": 1,
         "weapon_range": 3
     },
 
@@ -111,6 +113,7 @@ ITEM_ATTRIBUTES = {
         "image_path": './images/items/weapons/halberd.jpg',
         "slot": 'main_hand',
         "attack_power": 16,
+        "defense_power": 4,
         "blade_length": 15,
         "weapon_range": 2,
         "sharpness": 10
@@ -122,6 +125,7 @@ ITEM_ATTRIBUTES = {
         "image_path": './images/items/weapons/hammer.png',
         "slot": 'main_hand',
         "attack_power": 14,
+        "defense_power": 5,
         "weapon_range": 1
     }
 }

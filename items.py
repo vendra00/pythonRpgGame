@@ -43,7 +43,7 @@ class Weapon(Equipment, ABC):
 @dataclass
 class Blade(Weapon, ABC):
     sharpness: int
-    length: int
+    blade_length: int
 
     def __post_init__(self):
         if not self.thumbnail_path:
