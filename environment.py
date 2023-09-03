@@ -20,5 +20,5 @@ class TreasureChest:
         # Choose a random category (e.g., Weapons, Armor)
         random_category = random.choice(list(Items)).value[0]
 
-        # Choose a random item from that category
+        # Choose a random items from that category
         self.item = random.choice(list(random_category))

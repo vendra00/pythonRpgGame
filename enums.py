@@ -45,9 +45,10 @@ class Accessories(Enum):
 
 class Items(Enum):
     WEAPONS = (Weapons, "Weapons")
-    #ARMOR = (Armor, "Armor")
-    #CONSUMABLES = (Consumables, "Consumables")
-    #ACCESSORIES = (Accessories, "Accessories")
+
+    # ARMOR = (Armor, "Armor")
+    # CONSUMABLES = (Consumables, "Consumables")
+    # ACCESSORIES = (Accessories, "Accessories")
 
     # Add more items as needed
 
@@ -67,6 +68,14 @@ class Rarity(Enum):
     def __init__(self, name, color):
         self._name_ = name
         self.color = color
+
+
+class ItemTier(Enum):
+    TIER_1 = ("Tier 1", 1),
+    TIER_2 = ("Tier 2", 2),
+    TIER_3 = ("Tier 3", 3),
+    TIER_4 = ("Tier 4", 4),
+    TIER_5 = ("Tier 5", 5),
 
 
 class Effects(Enum):

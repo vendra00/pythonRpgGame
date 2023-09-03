@@ -1,12 +1,13 @@
 import tkinter as tk
 from tkinter import messagebox
 from typing import List, Union
+
 from PIL import Image, ImageTk
 
-from id_generator import IDGenerator
 from characters import Hero, MAP_SIZE, TILE_SIZE
 from environment import TreasureChest, Tree, Wall
-from item_attributes import ITEM_ATTRIBUTES, BASE_ITEM_ATTRIBUTES
+from inventory_service import InventoryService
+from item_service import ItemService
 
 
 class RPGGame(tk.Frame):
@@ -127,9 +128,9 @@ class RPGGame(tk.Frame):
 
     def check_item_pick_up(self, new_x, new_y):
         if isinstance(self.map[new_y][new_x], TreasureChest):
-            # Convert the enum item from the treasure chest to a real item object
+            # Convert the enum items from the treasure chest to a real items object
             chest: TreasureChest = self.map[new_y][new_x]
-            actual_item = self.create_item_from_enum(chest.item)  # Use self to reference class methods
+            actual_item = ItemService.create_item_from_enum(chest.item)
             self.hero.inventory.append(actual_item)
 
             # Clear the treasure chest tile (replace with '.')
@@ -137,23 +138,6 @@ class RPGGame(tk.Frame):
 
             # (Optional) Display a message to the player
             messagebox.showinfo("Item Collected", f"You've collected a {actual_item.name}!")
-
-    @staticmethod
-    def create_item_from_enum(weapon_enum):
-        item_attributes = ITEM_ATTRIBUTES.get(weapon_enum)
-        id_generator = IDGenerator()
-
-        if not item_attributes:
-            raise ValueError(f"Invalid weapon_enum: {weapon_enum}")
-
-        # Create a new item with a unique ID
-        combined_attributes = BASE_ITEM_ATTRIBUTES.copy()
-        combined_attributes['item_id'] = id_generator.generate_id()
-        combined_attributes.update(item_attributes)
-
-        # Extract the class reference and then remove it from the dictionary
-        item_class = combined_attributes.pop('class')
-        return item_class(**combined_attributes)
 
     def check_map_collision(self, new_x, new_y, x, y):
         if 0 <= new_x < len(self.map[0]) and 0 <= new_y < len(self.map) and self.is_passable(new_x, new_y):
@@ -241,28 +225,63 @@ class RPGGame(tk.Frame):
         # Create a new window for the inventory
         inventory_window = tk.Toplevel(self)
         inventory_window.title("Inventory")
-        print(self.hero.inventory)
 
-        # Loop through the hero's inventory and display each item
-        for idx, item in enumerate(self.hero.inventory, start=1):
-            item_label = tk.Label(inventory_window, text=f"{idx}. "
-                                                         f"Name: {item.name} - "
-                                                         f"Rarity: {item.rarity.name} - "
-                                                         f"Value: {item.value}")
-            item_label.pack(pady=2)
+        # Retrieve detailed descriptions for each items
+        item_descriptions = InventoryService.list_items(self.hero.inventory)
 
-            # Adding a "Use" button for each item
-            # use_button = tk.Button(inventory_window, text="Use", command=lambda item=item: self.use_item(item))
-
-            # use_button.pack(pady=2)
+        self.iterate_inventory(inventory_window, item_descriptions)
 
         # If the inventory is empty
+        self.display_empty_inventory_message(inventory_window)
+
+    def display_empty_inventory_message(self, inventory_window):
         if not self.hero.inventory:
             empty_label = tk.Label(inventory_window, text="Your inventory is empty.")
             empty_label.pack(pady=10)
 
+    def iterate_inventory(self, inventory_window, item_descriptions):
+        for item, desc in zip(self.hero.inventory, item_descriptions):
+            item_frame = tk.Frame(inventory_window, pady=10)
+            item_frame.pack(fill=tk.X)
+
+            # Handle image rendering and resize the image using Pillow
+            image_path = item.get_image_path()
+
+            # Open the image using Pillow
+            pil_image = Image.open(image_path)
+
+            # Resize the image to desired dimensions
+            pil_image = self.resize_item_img(pil_image)
+
+            # Convert the PIL image to a format Tkinter understands
+            tk_image = ImageTk.PhotoImage(pil_image)
+
+            # Use the resized image in your label
+            self.resize_inventory_item_img(item_frame, tk_image)
+
+            # Display items attributes using descriptions from InventoryService
+            self.display_item_attributes(desc, item_frame)
+
+    @staticmethod
+    def display_item_attributes(desc, item_frame):
+        attributes_label = tk.Label(item_frame, text=desc, justify=tk.LEFT, anchor=tk.W)
+        attributes_label.pack(side=tk.RIGHT, padx=10)
+
+    @staticmethod
+    def resize_item_img(pil_image):
+        desired_width = 100
+        desired_height = 100
+        pil_image = pil_image.resize((desired_width, desired_height), Image.BILINEAR)
+        return pil_image
+
+    @staticmethod
+    def resize_inventory_item_img(item_frame, tk_image):
+        image_label = tk.Label(item_frame, image=tk_image)
+        image_label.image = tk_image  # Keep a reference to prevent garbage collection
+        image_label.pack(side=tk.LEFT, padx=10)
+
     def use_item(self, item):
         if item.use_function:
             item.use_function(self.hero)  # Assuming the function expects a hero as an argument
-            self.hero.inventory.remove(item)  # Remove the used item from inventory
+            self.hero.inventory.remove(item)  # Remove the used items from inventory
             self.inventory()

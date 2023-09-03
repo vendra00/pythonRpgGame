@@ -14,7 +14,7 @@ ITEM_ATTRIBUTES = {
     Weapons.SWORD: {
         "class": Sword,
         "value": 35,
-        "image_path": './images/item/weapons/sword.png',
+        "image_path": './images/items/weapons/sword.png',
         "slot": 'main_hand',
         "attack_power": 10,
         "defense_power": 5,
@@ -25,7 +25,7 @@ ITEM_ATTRIBUTES = {
     Weapons.AXE: {
         "class": Axe,
         "value": 40,
-        "image_path": './images/item/weapons/axe.png',
+        "image_path": './images/items/weapons/axe.png',
         "slot": 'main_hand',
         "attack_power": 12,
         "defense_power": 4,
@@ -36,7 +36,7 @@ ITEM_ATTRIBUTES = {
     Weapons.SHIELD: {
         "class": Shield,
         "value": 30,
-        "image_path": './images/item/weapons/shield.jpg',
+        "image_path": './images/items/weapons/shield.jpg',
         "slot": 'off_hand',
         "attack_power": 0,
         "defense_power": 10,
@@ -47,7 +47,7 @@ ITEM_ATTRIBUTES = {
     Weapons.BOW: {
         "class": Bow,
         "value": 45,
-        "image_path": './images/item/weapons/bow.png',
+        "image_path": './images/items/weapons/bow.png',
         "slot": 'main_hand',
         "attack_power": 8,
         "defense_power": 2,
@@ -68,7 +68,7 @@ ITEM_ATTRIBUTES = {
     Weapons.DAGGER: {
         "class": Dagger,
         "value": 25,
-        "image_path": './images/item/weapons/dagger.png',
+        "image_path": './images/items/weapons/dagger.png',
         "slot": 'main_hand',
         "attack_power": 7,
         "defense_power": 3,
@@ -99,7 +99,7 @@ ITEM_ATTRIBUTES = {
     Weapons.CROSSBOW: {
         "class": Crossbow,
         "value": 50,
-        "image_path": './images/item/weapons/crossbow.png',
+        "image_path": './images/items/weapons/crossbow.png',
         "slot": 'main_hand',
         "attack_power": 14,
         "defense_power": 3,

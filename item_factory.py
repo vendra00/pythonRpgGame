@@ -33,10 +33,10 @@ class ItemFactory:
 
     @staticmethod
     def create_random_item():
-        # Select a random item category
+        # Select a random items category
         random_item_category = random.choice(list(Items))
 
-        # Select a random item from that category
+        # Select a random items from that category
         specific_item_enum = random.choice(list(random_item_category.enum))
 
         # Generate random attributes (for example, durability)

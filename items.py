@@ -13,6 +13,18 @@ class Item(ABC):
     image_path: str
     weight: int
 
+    def detailed_description(self):
+        details = [
+            f"Name: {self.name}",
+            f"Rarity: {self.rarity.name}",
+            f"Value: {self.value}",
+            f"Weight: {self.weight} lbs",
+        ]
+        return "\n".join(details)
+
+    def get_image_path(self):
+        return self.image_path
+
 
 @dataclass
 class Equipment(Item, ABC):
