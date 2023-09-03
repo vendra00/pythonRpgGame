@@ -17,8 +17,8 @@ class Item(ABC):
         details = [
             f"Name: {self.name}",
             f"Rarity: {self.rarity.name}",
-            f"Value: {self.value}",
-            f"Weight: {self.weight} lbs",
+            f"Value: {self.value} gold",
+            f"Weight: {self.weight} kg",
         ]
         return "\n".join(details)
 
@@ -51,6 +51,9 @@ class Weapon(Equipment, ABC):
     def swing(self):
         pass
 
+    def parry(self):
+        pass
+
 
 @dataclass
 class Blade(Weapon, ABC):
@@ -64,6 +67,9 @@ class Blade(Weapon, ABC):
     def sharpen(self):
         pass
 
+    def slash(self):
+        pass
+
 
 @dataclass
 class Blunt(Weapon, ABC):
@@ -72,6 +78,9 @@ class Blunt(Weapon, ABC):
     def __post_init__(self):
         if not self.thumbnail_path:
             self.thumbnail_path = './images/thumbnails/blunt.png'
+
+    def bludgeon(self):
+        pass
 
 
 @dataclass
@@ -85,6 +94,27 @@ class Ranged(Weapon, ABC):
     def shoot(self):
         pass
 
+    def reload(self):
+        pass
+
+    def aim(self):
+        pass
+
+
+@dataclass
+class Polearm(Weapon, ABC):
+    pole_length: int
+
+    def __post_init__(self):
+        if not self.thumbnail_path:
+            self.thumbnail_path = './images/thumbnails/polearm.png'
+
+    def thrust(self):
+        pass
+
+    def sweep(self):
+        pass
+
 
 @dataclass
 class Shield(Weapon, ABC):
@@ -92,6 +122,18 @@ class Shield(Weapon, ABC):
     block_chance: int
 
     def block(self):
+        pass
+
+    def bash(self):
+        pass
+
+    def riposte(self):
+        pass
+
+    def deflect(self):
+        pass
+
+    def counter(self):
         pass
 
 
@@ -102,47 +144,63 @@ class Sword(Blade, ABC):
 
 @dataclass
 class Axe(Blade, ABC):
-    pass
+
+    def cleave(self):
+        pass
 
 
 @dataclass
 class Mace(Blunt, ABC):
-    pass
+
+    def crush(self):
+        pass
 
 
 @dataclass
 class Bow(Ranged, ABC):
-    pass
+    def arrow(self):
+        pass
 
 
 @dataclass
 class Crossbow(Ranged, ABC):
-    pass
+    def bolt(self):
+        pass
 
 
 @dataclass
 class Dagger(Blade, ABC):
-    pass
+
+    def stab(self):
+        pass
 
 
 @dataclass
 class Halberd(Weapon, ABC):
-    pass
+
+    def pierce(self):
+        pass
 
 
 @dataclass
 class Hammer(Blunt, ABC):
-    pass
+
+    def smash(self):
+        pass
 
 
 @dataclass
 class Staff(Blunt, ABC):
-    pass
+
+    def jab(self):
+        pass
 
 
 @dataclass
 class Wand(Blunt, ABC):
-    pass
+
+    def cast(self):
+        pass
 
 
 @dataclass

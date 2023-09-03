@@ -58,7 +58,7 @@ class Items(Enum):
 
 
 class Rarity(Enum):
-    COMMON = ("Common", "#FFFFFF")  # White color for common items
+    COMMON = ("Common", "a4a4a4")  # White color for common items
     UNCOMMON = ("Uncommon", "#1EFF00")  # Green for uncommon items
     RARE = ("Rare", "#0070DD")  # Blue for rare items
     EPIC = ("Epic", "#A335EE")  # Purple for epic items

@@ -1,4 +1,4 @@
-TILE_SIZE = 50
+TILE_SIZE = 60
 MAP_SIZE = 10
 
 

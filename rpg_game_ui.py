@@ -4,7 +4,7 @@ from typing import List, Union
 
 from PIL import Image, ImageTk
 
-from characters import Hero, MAP_SIZE, TILE_SIZE
+from characters import Hero, TILE_SIZE, MAP_SIZE
 from environment import TreasureChest, Tree, Wall
 from inventory_service import InventoryService
 from item_service import ItemService

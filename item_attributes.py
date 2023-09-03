@@ -114,9 +114,7 @@ ITEM_ATTRIBUTES = {
         "slot": 'main_hand',
         "attack_power": 16,
         "defense_power": 4,
-        "blade_length": 15,
-        "weapon_range": 2,
-        "sharpness": 10
+        "weapon_range": 2
     },
 
     Weapons.HAMMER: {
