@@ -104,6 +104,17 @@ class Effects(Enum):
     REGENERATE = auto()
 
 
+class DamageType(Enum):
+    PHYSICAL = auto()
+    FIRE = auto()
+    ICE = auto()
+    LIGHTNING = auto()
+    POISON = auto()
+    HOLY = auto()
+    UNHOLY = auto()
+    ARCANE = auto()
+
+
 class AmmoType(Enum):
     ARROW = auto()
     BOLT = auto()
