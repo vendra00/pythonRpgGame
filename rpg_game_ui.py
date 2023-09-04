@@ -6,7 +6,7 @@ from PIL import Image, ImageTk
 
 from characters import Hero, TILE_SIZE, MAP_SIZE
 from draw_element_service import draw_map
-from enums import ItemActions
+from enums import ItemActions, MapElements, KeyBindings
 from environment import TreasureChest, Tree, Wall
 from inventory_service import InventoryService
 from item_service import ItemService
@@ -42,10 +42,11 @@ class RPGGame(tk.Frame):
         self.pack()
 
         # Bind the arrow keys
-        self.bind("<Up>", self.move_up)
-        self.bind("<Down>", self.move_down)
-        self.bind("<Left>", self.move_left)
-        self.bind("<Right>", self.move_right)
+        self.bind(KeyBindings.UP.key, self.move_up)
+        self.bind(KeyBindings.DOWN.key, self.move_down)
+        self.bind(KeyBindings.LEFT.key, self.move_left)
+        self.bind(KeyBindings.RIGHT.key, self.move_right)
+        self.bind(KeyBindings.INVENTORY.key, self.inventory)
 
         # This makes sure that the main window can detect the keypress events
         self.focus_set()
@@ -60,14 +61,14 @@ class RPGGame(tk.Frame):
         """ Initialize class attributes """
         self.hero = Hero(name="Sir Lancelot")
         self.map: List[List[Union[str, Hero]]] = [['.' for _ in range(MAP_SIZE)] for _ in range(MAP_SIZE)]
-        self.elements = {"hero": self.hero}
+        self.elements = {MapElements.HERO.element: self.hero}
 
         # Create trees
         for i in range(1, 5):  # assuming you have 4 trees
             self.elements[f"tree_{i:02}"] = Tree()
 
         # Create walls
-        self.elements["wall"] = Wall()  # Assuming all walls share the same instance
+        self.elements[MapElements.WALL.element] = Wall()  # Assuming all walls share the same instance
 
         # Create treasure chests
         for i in range(1, 9):  # assuming you have 8 treasure chests
@@ -92,10 +93,10 @@ class RPGGame(tk.Frame):
         self.map[6][7] = self.elements["treasure_chest_07"]
         self.map[5][7] = self.elements["treasure_chest_08"]
         for i in range(MAP_SIZE):  # Vertical wall on the left side
-            self.map[i][0] = self.elements["wall"]
+            self.map[i][0] = self.elements[MapElements.WALL.element]
 
     def refresh_map(self):
-        draw_map(self.canvas, self.map, self.elements, self.images_cache)  # Pass the cache
+        draw_map(self.canvas, self.map, self.elements, self.images_cache)
 
     def get_element_images(self):
         """ Load and return images for all map elements """
@@ -206,13 +207,14 @@ class RPGGame(tk.Frame):
     def battle():
         messagebox.showinfo("Battle", "A wild enemy appears!")
 
-    def inventory(self):
+    def inventory(self, event=None):
 
         # Create a new window for the inventory
         inventory_window = tk.Toplevel(self)
         inventory_window.title("Inventory")
-        inventory_window.bind("<Up>", self.navigate_inventory_up)
-        inventory_window.bind("<Down>", self.navigate_inventory_down)
+        inventory_window.bind(KeyBindings.UP.key, self.navigate_inventory_up)
+        inventory_window.bind(KeyBindings.DOWN.key, self.navigate_inventory_down)
+        inventory_window.bind(KeyBindings.CLOSE.key, lambda e: inventory_window.destroy())
         inventory_window.focus_set()
 
         # Retrieve detailed descriptions for each items
