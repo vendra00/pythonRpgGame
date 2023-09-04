@@ -132,3 +132,26 @@ class ItemActions(Enum):
 
     def __init__(self, action):
         self.action = action
+
+
+class MapElements(Enum):
+    HERO = "hero"
+    WALL = "wall"
+    TREE = "tree"
+    TREASURE_CHEST = "treasure_chest"
+
+    def __init__(self, element):
+        self.element = element
+
+
+class KeyBindings(Enum):
+    CLOSE = "<Escape>"
+    ENTER = "<Return>"
+    UP = "<Up>"
+    DOWN = "<Down>"
+    LEFT = "<Left>"
+    RIGHT = "<Right>"
+    INVENTORY = "i"
+
+    def __init__(self, key):
+        self.key = key
