@@ -143,9 +143,6 @@ class RPGGame(tk.Frame):
             # Play the pickup sound effect
             self.play_sfx('audio/sfx/pick_up_item.mp3', 1000)
 
-            # (Optional) Display a message to the player
-            messagebox.showinfo("Item Collected", f"You've collected a {actual_item.name}!")
-
     def move(self, direction, event=None):
         dx, dy = direction.coordinate
         print(f"{direction.name} button pressed")
