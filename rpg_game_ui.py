@@ -5,6 +5,7 @@ from typing import List, Union
 from PIL import Image, ImageTk
 
 from characters import Hero, TILE_SIZE, MAP_SIZE
+from enums import ItemActions
 from environment import TreasureChest, Tree, Wall
 from inventory_service import InventoryService
 from item_service import ItemService
@@ -317,34 +318,35 @@ class RPGGame(tk.Frame):
 
     def add_item_buttons(self, item_frame, index):
         # Use Button
-        use_button = tk.Button(item_frame, text="Use", command=lambda idx=index: self.perform_item_action("Use", idx))
+        use_button = tk.Button(item_frame, text=ItemActions.USE.action,
+                               command=lambda idx=index: self.perform_item_action(ItemActions.USE.action, idx))
         use_button.pack(side=tk.RIGHT, padx=5)
 
         # Equip Button
-        equip_button = tk.Button(item_frame, text="Equip",
-                                 command=lambda idx=index: self.perform_item_action("Equip", idx))
+        equip_button = tk.Button(item_frame, text=ItemActions.EQUIP.action,
+                                 command=lambda idx=index: self.perform_item_action(ItemActions.EQUIP.action, idx))
         equip_button.pack(side=tk.RIGHT, padx=5)
 
         # Drop Button
-        drop_button = tk.Button(item_frame, text="Drop",
-                                command=lambda idx=index: self.perform_item_action("Drop", idx))
+        drop_button = tk.Button(item_frame, text=ItemActions.DROP.action,
+                                command=lambda idx=index: self.perform_item_action(ItemActions.DROP.action, idx))
         drop_button.pack(side=tk.RIGHT, padx=5)
 
     def perform_item_action(self, action, index):
         item = self.hero.inventory[index]
-        if action == "Use":
+        if action == ItemActions.USE.action:
             # Use item
             pass
-        elif action == "Equip":
+        elif action == ItemActions.EQUIP.action:
             # Equip item
             pass
-        elif action == "Drop":
+        elif action == ItemActions.DROP.action:
             # Remove the item from inventory and update UI
             self.hero.inventory.pop(index)
             frame_to_remove = self.item_frames.pop(index)
             frame_to_remove.destroy()
 
-            # Adjust the lambda functions for all subsequent buttons so they
+            # Adjust the lambda functions for all subsequent buttons, so they
             # reference the correct index after an item has been dropped
             for idx, frame in enumerate(self.item_frames[index:], start=index):
                 # For each button in this frame, reset its command to have the correct index

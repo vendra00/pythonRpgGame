@@ -118,3 +118,17 @@ class DamageType(Enum):
 class AmmoType(Enum):
     ARROW = auto()
     BOLT = auto()
+
+
+class ItemActions(Enum):
+    EQUIP = "Equip"
+    UNEQUIP = "Unequip"
+    USE = "Use"
+    DROP = "Drop"
+    REPAIR = "Repair"
+    SELL = "Sell"
+    BUY = "Buy"
+    TRADE = "Trade"
+
+    def __init__(self, action):
+        self.action = action
