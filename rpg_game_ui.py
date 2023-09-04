@@ -15,6 +15,9 @@ from item_service import ItemService
 
 class RPGGame(tk.Frame):
     def __init__(self, master=None):
+
+        pygame.mixer.init()
+
         super().__init__(master)
 
         # Define the instance attributes
@@ -37,9 +40,6 @@ class RPGGame(tk.Frame):
         self.item_frames = []
         self.images_cache = {}
         self.currently_highlighted_index = None
-
-        # Initialize audio mixer
-        pygame.mixer.init()
 
         # Play the default audio track
         self.play_audio_track('audio/track/main.mp3')
@@ -67,14 +67,14 @@ class RPGGame(tk.Frame):
 
     @staticmethod
     def play_audio_track(file_path):
-        """
-        Play an audio track in the background.
-
-        Parameters:
-        - file_path: The path to the audio file to be played.
-        """
         pygame.mixer.music.load(file_path)
         pygame.mixer.music.play(-1)  # This will play the track in a loop
+
+    def play_sfx(self, path, duration):
+        """Play a sound effect from the given path for a specific duration."""
+        sfx = pygame.mixer.Sound(path)
+        sfx.play()
+        self.after(duration, sfx.stop)
 
     def initialize_attributes(self):
         """ Initialize class attributes """
@@ -130,6 +130,7 @@ class RPGGame(tk.Frame):
         new_x, new_y = x + dx, y + dy
         self.check_item_pick_up(new_x, new_y)
         self.check_map_collision(new_x, new_y, x, y)
+        self.play_sfx('audio/sfx/walk.mp3', 1000)
 
     def check_item_pick_up(self, new_x, new_y):
         if isinstance(self.map[new_y][new_x], TreasureChest):
@@ -140,6 +141,9 @@ class RPGGame(tk.Frame):
 
             # Clear the treasure chest tile (replace with '.')
             self.map[new_y][new_x] = '.'
+
+            # Play the pickup sound effect
+            self.play_sfx('audio/sfx/pick_up_item.mp3', 1000)
 
             # (Optional) Display a message to the player
             messagebox.showinfo("Item Collected", f"You've collected a {actual_item.name}!")
