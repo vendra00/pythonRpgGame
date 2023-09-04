@@ -78,6 +78,28 @@ class ItemTier(Enum):
     TIER_5 = ("Tier 5", 5),
 
 
+class ItemSlot(Enum):
+    HEAD = auto()
+    CHEST = auto()
+    LEGS = auto()
+    FEET = auto()
+    HANDS = auto()
+    SHOULDERS = auto()
+    RING = auto()
+    NECK = auto()
+    BELT = auto()
+    CAPE = auto()
+    CLOAK = auto()
+    BRACERS = auto()
+    EARRINGS = auto()
+    MAIN_HAND = auto()
+    OFF_HAND = auto()
+    TWO_HAND = auto()
+
+    def __init__(self, slot):
+        self.slot = slot
+
+
 class Effects(Enum):
     POISON = auto()
     BURN = auto()
@@ -155,3 +177,14 @@ class KeyBindings(Enum):
 
     def __init__(self, key):
         self.key = key
+
+
+class BaseMovementCoordinates(Enum):
+    UP = (0, -1)
+    DOWN = (0, 1)
+    LEFT = (-1, 0)
+    RIGHT = (1, 0)
+
+    def __init__(self, dx, dy):
+        self.coordinate = (dx, dy)
+
