@@ -1,6 +1,6 @@
 from random import choice
 
-from id_generator import IDGenerator
+from utils.id_generator import IDGenerator
 from item_attributes import ITEM_ATTRIBUTES, BASE_ITEM_ATTRIBUTES
 
 

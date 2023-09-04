@@ -1,7 +1,7 @@
 import tkinter as tk
 from PIL import Image, ImageTk
 
-from characters import TILE_SIZE
+from model.characters import TILE_SIZE
 
 
 def draw_element(canvas, element, image_cache):
@@ -47,4 +47,3 @@ def draw_map(canvas, map_data, elements, images_cache):
             else:
                 canvas.create_rectangle(x * TILE_SIZE, y * TILE_SIZE,
                                         (x + 1) * TILE_SIZE, (y + 1) * TILE_SIZE, fill='white')
-

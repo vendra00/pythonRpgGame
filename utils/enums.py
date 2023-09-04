@@ -188,3 +188,26 @@ class BaseMovementCoordinates(Enum):
     def __init__(self, dx, dy):
         self.coordinate = (dx, dy)
 
+
+class Sfx(Enum):
+    WALK = "walk.mp3"
+    PICK_UP = "pick_up_item.mp3"
+
+    def __init__(self, sfx):
+        self.sfx_file = sfx
+
+
+class MusicTrack(Enum):
+    FORREST = "forrest.mp3"
+
+    def __init__(self, track):
+        self.track_file = track
+
+
+class SoundPaths(Enum):
+    SFX = (Sfx, "audio/sfx/")
+    MUSIC = (MusicTrack, "audio/track/")
+
+    def __init__(self, sound_enum, path):
+        self.sound_enum = sound_enum
+        self.path = path

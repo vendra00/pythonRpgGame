@@ -5,13 +5,13 @@ from typing import List, Union
 import pygame
 from PIL import Image, ImageTk
 
-import hero_service
-from characters import Hero, TILE_SIZE, MAP_SIZE
-from draw_element_service import draw_map
-from enums import ItemActions, MapElements, KeyBindings, BaseMovementCoordinates
-from environment import TreasureChest, Tree, Wall
-from inventory_service import InventoryService
-from item_service import ItemService
+from service import hero_service
+from model.characters import Hero, TILE_SIZE, MAP_SIZE
+from service.draw_element_service import draw_map
+from utils.enums import ItemActions, MapElements, KeyBindings, BaseMovementCoordinates, SoundPaths, Sfx, MusicTrack
+from model.environment import TreasureChest, Tree, Wall
+from service.inventory_service import InventoryService
+from service.item_service import ItemService
 
 
 class RPGGame(tk.Frame):
@@ -43,7 +43,7 @@ class RPGGame(tk.Frame):
         self.currently_highlighted_index = None
 
         # Play the default audio track
-        self.play_audio_track('audio/track/main.mp3')
+        self.play_audio_track(build_sound_path(MusicTrack.FORREST))
 
         # Set the main window properties
         assert isinstance(self.master, tk.Tk)
@@ -141,7 +141,8 @@ class RPGGame(tk.Frame):
             self.map[new_y][new_x] = '.'
 
             # Play the pickup sound effect
-            self.play_sfx('audio/sfx/pick_up_item.mp3', 1000)
+            print(Sfx.PICK_UP)
+            self.play_sfx(build_sound_path(Sfx.PICK_UP), 1000)
 
     def move(self, direction, event=None):
         dx, dy = direction.coordinate
@@ -381,3 +382,12 @@ class RPGGame(tk.Frame):
             item.use_function(self.hero)  # Assuming the function expects a hero as an argument
             self.hero.inventory.remove(item)  # Remove the used items from inventory
             self.inventory()
+
+
+def build_sound_path(sound_enum_value):
+    if isinstance(sound_enum_value, Sfx):
+        return f"{SoundPaths.SFX.path}{sound_enum_value.sfx_file}"
+    elif isinstance(sound_enum_value, MusicTrack):
+        return f"{SoundPaths.MUSIC.path}{sound_enum_value.track_file}"
+    else:
+        raise ValueError(f"Unknown sound enum type: {sound_enum_value}")

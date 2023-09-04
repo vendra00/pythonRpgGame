@@ -1,6 +1,3 @@
-from draw_element_service import draw_map
-
-
 def hero_attack(hero, enemy):
     damage = hero.atk - enemy.defense
     if damage > 0:

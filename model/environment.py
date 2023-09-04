@@ -1,6 +1,6 @@
 import random
 
-from enums import Items
+from utils.enums import Items
 
 
 class Wall:

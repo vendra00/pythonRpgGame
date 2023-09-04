@@ -1,4 +1,4 @@
-from enums import ItemSlot
+from utils.enums import ItemSlot
 
 TILE_SIZE = 60
 MAP_SIZE = 10

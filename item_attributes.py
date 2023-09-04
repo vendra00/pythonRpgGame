@@ -1,5 +1,5 @@
-from enums import Weapons, AmmoType, Rarity
-from items import Sword, Axe, Shield, Bow, Mace, Dagger, Staff, Wand, Crossbow, Halberd, Hammer
+from utils.enums import Weapons, AmmoType, Rarity
+from model.items import Sword, Axe, Shield, Bow, Mace, Dagger, Staff, Wand, Crossbow, Halberd, Hammer
 
 
 BASE_ITEM_ATTRIBUTES = {

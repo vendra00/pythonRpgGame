@@ -1,5 +1,5 @@
 from typing import List
-from items import Item
+from model.items import Item
 
 
 class InventoryService:
