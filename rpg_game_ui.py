@@ -310,6 +310,7 @@ class RPGGame(tk.Frame):
             pass
         elif action == ItemActions.DROP.action:
             # Remove the item from inventory and update UI
+            self.play_sfx(build_sound_path(Sfx.DROP), 1000)
             self.hero.inventory.pop(index)
             frame_to_remove = self.item_frames.pop(index)
             frame_to_remove.destroy()
@@ -355,6 +356,7 @@ class RPGGame(tk.Frame):
 
         # Highlight the current item
         if self.currently_highlighted_index is not None:
+            self.play_sfx(build_sound_path(Sfx.SELECTOR), 1000)
             current_frame = self.item_frames[self.currently_highlighted_index]
             current_frame.configure(highlightbackground='blue')
             current_frame.configure(highlightthickness=2)

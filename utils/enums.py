@@ -192,6 +192,8 @@ class BaseMovementCoordinates(Enum):
 class Sfx(Enum):
     WALK = "walk.mp3"
     PICK_UP = "pick_up_item.mp3"
+    DROP = "drop_item.mp3"
+    SELECTOR = "selector.mp3"
 
     def __init__(self, sfx):
         self.sfx_file = sfx
