@@ -5,6 +5,7 @@ from typing import List, Union
 from PIL import Image, ImageTk
 
 from characters import Hero, TILE_SIZE, MAP_SIZE
+from draw_element_service import draw_map
 from enums import ItemActions
 from environment import TreasureChest, Tree, Wall
 from inventory_service import InventoryService
@@ -33,6 +34,7 @@ class RPGGame(tk.Frame):
         self.elements = None
         self.selected_item = None
         self.item_frames = []
+        self.images_cache = {}
         self.currently_highlighted_index = None
 
         assert isinstance(self.master, tk.Tk)
@@ -52,28 +54,24 @@ class RPGGame(tk.Frame):
         self.initialize_attributes()
         self.create_widgets()
         self.initialize_map()
-        self.draw_map()
+        draw_map(self.canvas, self.map, self.elements, self.images_cache)
 
     def initialize_attributes(self):
         """ Initialize class attributes """
         self.hero = Hero(name="Sir Lancelot")
         self.map: List[List[Union[str, Hero]]] = [['.' for _ in range(MAP_SIZE)] for _ in range(MAP_SIZE)]
-        self.elements = {
-            "hero": self.hero,
-            "tree_01": Tree(),
-            "tree_02": Tree(),
-            "tree_03": Tree(),
-            "tree_04": Tree(),
-            "wall": Wall(),
-            "treasure_chest_01": TreasureChest(),
-            "treasure_chest_02": TreasureChest(),
-            "treasure_chest_03": TreasureChest(),
-            "treasure_chest_04": TreasureChest(),
-            "treasure_chest_05": TreasureChest(),
-            "treasure_chest_06": TreasureChest(),
-            "treasure_chest_07": TreasureChest(),
-            "treasure_chest_08": TreasureChest()
-        }
+        self.elements = {"hero": self.hero}
+
+        # Create trees
+        for i in range(1, 5):  # assuming you have 4 trees
+            self.elements[f"tree_{i:02}"] = Tree()
+
+        # Create walls
+        self.elements["wall"] = Wall()  # Assuming all walls share the same instance
+
+        # Create treasure chests
+        for i in range(1, 9):  # assuming you have 8 treasure chests
+            self.elements[f"treasure_chest_{i:02}"] = TreasureChest()
 
     def initialize_map(self):
         """ Set the initial configuration of the map """
@@ -96,68 +94,22 @@ class RPGGame(tk.Frame):
         for i in range(MAP_SIZE):  # Vertical wall on the left side
             self.map[i][0] = self.elements["wall"]
 
-    def draw_map(self):
-        """ Draw the entire map on canvas """
-        self.canvas.delete("all")
-
-        images = self.get_element_images()
-        for y, row in enumerate(self.map):
-            for x, tile in enumerate(row):
-                if tile in self.elements.values():
-                    self.canvas.create_image(x * TILE_SIZE, y * TILE_SIZE, anchor=tk.NW, image=images[tile])
-                else:
-                    self.canvas.create_rectangle(x * TILE_SIZE, y * TILE_SIZE,
-                                                 (x + 1) * TILE_SIZE, (y + 1) * TILE_SIZE, fill='white')
+    def refresh_map(self):
+        draw_map(self.canvas, self.map, self.elements, self.images_cache)  # Pass the cache
 
     def get_element_images(self):
         """ Load and return images for all map elements """
-        images = {}
         for key, element in self.elements.items():
-            pil_image = Image.open(element.image_path).resize((TILE_SIZE, TILE_SIZE), 3)
-            images[element] = ImageTk.PhotoImage(pil_image)
-            setattr(self.canvas, f"{key}_image", images[element])
-        return images
+            if element not in self.images_cache:
+                pil_image = Image.open(element.image_path).resize((TILE_SIZE, TILE_SIZE), 3)
+                self.images_cache[element] = ImageTk.PhotoImage(pil_image)
+        return self.images_cache  # Return the cache
 
     def move_hero(self, dx, dy):
         x, y = self.hero.position
         new_x, new_y = x + dx, y + dy
         self.check_item_pick_up(new_x, new_y)
         self.check_map_collision(new_x, new_y, x, y)
-
-    def draw_map_elements(self):
-        hero_image = self.draw_hero()
-        tree_image = self.draw_tree()
-        wall_image = self.draw_wall()
-        treasure_chest_image = self.draw_treasure_chest()
-        return hero_image, tree_image, wall_image, treasure_chest_image
-
-    def draw_wall(self):
-        wall_pil_image = Image.open(self.wall.image_path)
-        wall_pil_image = wall_pil_image.resize((TILE_SIZE, TILE_SIZE), 3)
-        wall_image = ImageTk.PhotoImage(wall_pil_image)
-        self.canvas.wall_image = wall_image
-        return wall_image
-
-    def draw_tree(self):
-        tree_pil_image = Image.open(self.tree.image_path)  # Using PIL to open the image
-        tree_pil_image = tree_pil_image.resize((TILE_SIZE, TILE_SIZE), 3)  # Resize the image to fit the tile size
-        tree_image = ImageTk.PhotoImage(tree_pil_image)  # Convert PIL image to Tkinter PhotoImage
-        self.canvas.tree_image = tree_image  # Store a reference to avoid garbage collection
-        return tree_image
-
-    def draw_treasure_chest(self):
-        treasure_chest_pil_image = Image.open(self.treasure_chest.image_path)
-        treasure_chest_pil_image = treasure_chest_pil_image.resize((TILE_SIZE, TILE_SIZE), 3)
-        treasure_chest_image = ImageTk.PhotoImage(treasure_chest_pil_image)
-        self.canvas.treasure_chest_image = treasure_chest_image
-        return treasure_chest_image
-
-    def draw_hero(self):
-        hero_pil_image = Image.open(self.hero.image_path)
-        hero_pil_image = hero_pil_image.resize((TILE_SIZE, TILE_SIZE), 3)
-        hero_image = ImageTk.PhotoImage(hero_pil_image)
-        self.canvas.hero_image = hero_image
-        return hero_image
 
     def check_item_pick_up(self, new_x, new_y):
         if isinstance(self.map[new_y][new_x], TreasureChest):
@@ -179,7 +131,7 @@ class RPGGame(tk.Frame):
             # Set the new position of the hero on the map.
             self.hero.position = (new_x, new_y)
             self.map[new_y][new_x] = self.hero
-            self.draw_map()  # Redraw the map to reflect the new hero position.
+            draw_map(self.canvas, self.map, self.elements, self.images_cache)
 
     def is_passable(self, x, y):
         return not isinstance(self.map[y][x], (Wall, Tree))
