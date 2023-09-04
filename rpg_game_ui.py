@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import messagebox
 from typing import List, Union
 
+import pygame
 from PIL import Image, ImageTk
 
 from characters import Hero, TILE_SIZE, MAP_SIZE
@@ -37,6 +38,12 @@ class RPGGame(tk.Frame):
         self.images_cache = {}
         self.currently_highlighted_index = None
 
+        # Initialize audio mixer
+        pygame.mixer.init()
+
+        # Play the default audio track
+        self.play_audio_track('audio/track/main.mp3')
+
         assert isinstance(self.master, tk.Tk)
         self.master.title("Fantasy RPG Game")
         self.pack()
@@ -56,6 +63,18 @@ class RPGGame(tk.Frame):
         self.create_widgets()
         self.initialize_map()
         draw_map(self.canvas, self.map, self.elements, self.images_cache)
+        pygame.mixer.init()
+
+    @staticmethod
+    def play_audio_track(file_path):
+        """
+        Play an audio track in the background.
+
+        Parameters:
+        - file_path: The path to the audio file to be played.
+        """
+        pygame.mixer.music.load(file_path)
+        pygame.mixer.music.play(-1)  # This will play the track in a loop
 
     def initialize_attributes(self):
         """ Initialize class attributes """
