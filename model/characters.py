@@ -1,3 +1,5 @@
+from utils.enums import ItemSlot
+
 TILE_SIZE = 60
 MAP_SIZE = 10
 
@@ -11,6 +13,7 @@ class Hero:
         self.inventory = []
         self.xp = 0
         self.level = 1
+        self.equipment = {slot: None for slot in ItemSlot}
 
         self.position = (MAP_SIZE // 2, MAP_SIZE // 2)  # Starting position: center of the map
         self.image_path = './images/hero.png'  # Path to the hero's image

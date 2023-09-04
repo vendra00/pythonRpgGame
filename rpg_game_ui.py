@@ -5,16 +5,20 @@ from typing import List, Union
 import pygame
 from PIL import Image, ImageTk
 
-from characters import Hero, TILE_SIZE, MAP_SIZE
-from draw_element_service import draw_map
-from enums import ItemActions, MapElements, KeyBindings
-from environment import TreasureChest, Tree, Wall
-from inventory_service import InventoryService
-from item_service import ItemService
+from service import hero_service
+from model.characters import Hero, TILE_SIZE, MAP_SIZE
+from service.draw_element_service import draw_map
+from utils.enums import ItemActions, MapElements, KeyBindings, BaseMovementCoordinates, SoundPaths, Sfx, MusicTrack
+from model.environment import TreasureChest, Tree, Wall
+from service.inventory_service import InventoryService
+from service.item_service import ItemService
 
 
 class RPGGame(tk.Frame):
     def __init__(self, master=None):
+
+        # Initialize the pygame mixer
+        pygame.mixer.init()
         super().__init__(master)
 
         # Define the instance attributes
@@ -38,22 +42,16 @@ class RPGGame(tk.Frame):
         self.images_cache = {}
         self.currently_highlighted_index = None
 
-        # Initialize audio mixer
-        pygame.mixer.init()
-
         # Play the default audio track
-        self.play_audio_track('audio/track/main.mp3')
+        self.play_audio_track(build_sound_path(MusicTrack.FORREST))
 
+        # Set the main window properties
         assert isinstance(self.master, tk.Tk)
         self.master.title("Fantasy RPG Game")
         self.pack()
 
-        # Bind the arrow keys
-        self.bind(KeyBindings.UP.key, self.move_up)
-        self.bind(KeyBindings.DOWN.key, self.move_down)
-        self.bind(KeyBindings.LEFT.key, self.move_left)
-        self.bind(KeyBindings.RIGHT.key, self.move_right)
-        self.bind(KeyBindings.INVENTORY.key, self.inventory)
+        # Bind the keyboard events
+        self.set_main_window_key_bindings()
 
         # This makes sure that the main window can detect the keypress events
         self.focus_set()
@@ -65,16 +63,23 @@ class RPGGame(tk.Frame):
         draw_map(self.canvas, self.map, self.elements, self.images_cache)
         pygame.mixer.init()
 
+    def set_main_window_key_bindings(self):
+        self.bind(KeyBindings.UP.key, self.move_up)
+        self.bind(KeyBindings.DOWN.key, self.move_down)
+        self.bind(KeyBindings.LEFT.key, self.move_left)
+        self.bind(KeyBindings.RIGHT.key, self.move_right)
+        self.bind(KeyBindings.INVENTORY.key, self.inventory)
+
     @staticmethod
     def play_audio_track(file_path):
-        """
-        Play an audio track in the background.
-
-        Parameters:
-        - file_path: The path to the audio file to be played.
-        """
         pygame.mixer.music.load(file_path)
         pygame.mixer.music.play(-1)  # This will play the track in a loop
+
+    def play_sfx(self, path, duration):
+        """Play a sound effect from the given path for a specific duration."""
+        sfx = pygame.mixer.Sound(path)
+        sfx.play()
+        self.after(duration, sfx.stop)
 
     def initialize_attributes(self):
         """ Initialize class attributes """
@@ -125,12 +130,6 @@ class RPGGame(tk.Frame):
                 self.images_cache[element] = ImageTk.PhotoImage(pil_image)
         return self.images_cache  # Return the cache
 
-    def move_hero(self, dx, dy):
-        x, y = self.hero.position
-        new_x, new_y = x + dx, y + dy
-        self.check_item_pick_up(new_x, new_y)
-        self.check_map_collision(new_x, new_y, x, y)
-
     def check_item_pick_up(self, new_x, new_y):
         if isinstance(self.map[new_y][new_x], TreasureChest):
             # Convert the enum items from the treasure chest to a real items object
@@ -141,36 +140,32 @@ class RPGGame(tk.Frame):
             # Clear the treasure chest tile (replace with '.')
             self.map[new_y][new_x] = '.'
 
-            # (Optional) Display a message to the player
-            messagebox.showinfo("Item Collected", f"You've collected a {actual_item.name}!")
+            # Play the pickup sound effect
+            print(Sfx.PICK_UP)
+            self.play_sfx(build_sound_path(Sfx.PICK_UP), 1000)
 
-    def check_map_collision(self, new_x, new_y, x, y):
-        if 0 <= new_x < len(self.map[0]) and 0 <= new_y < len(self.map) and self.is_passable(new_x, new_y):
-            # Clear the old position of the hero on the map.
-            self.map[y][x] = '.'
-            # Set the new position of the hero on the map.
-            self.hero.position = (new_x, new_y)
-            self.map[new_y][new_x] = self.hero
-            draw_map(self.canvas, self.map, self.elements, self.images_cache)
-
-    def is_passable(self, x, y):
-        return not isinstance(self.map[y][x], (Wall, Tree))
+    def move(self, direction, event=None):
+        dx, dy = direction.coordinate
+        print(f"{direction.name} button pressed")
+        hero_service.move_hero(self.hero, self.map, dx, dy, self.check_item_pick_up, hero_service.check_map_collision,
+                               self.play_sfx)
+        self.update_map()
 
     def move_up(self, event=None):
-        print("Up button pressed")
-        self.move_hero(0, -1)
+        self.move(BaseMovementCoordinates.UP)
 
     def move_down(self, event=None):
-        print("Down button pressed")
-        self.move_hero(0, 1)
+        self.move(BaseMovementCoordinates.DOWN)
 
     def move_left(self, event=None):
-        print("Left button pressed")
-        self.move_hero(-1, 0)
+        self.move(BaseMovementCoordinates.LEFT)
 
     def move_right(self, event=None):
-        print("Right button pressed")
-        self.move_hero(1, 0)
+        self.move(BaseMovementCoordinates.RIGHT)
+
+    def update_map(self):
+        # This function redraws the map, possibly using 'draw_map' function or similar.
+        draw_map(self.canvas, self.map, self.elements, self.images_cache)
 
     def create_widgets(self):
         # Directional buttons styling
@@ -315,6 +310,7 @@ class RPGGame(tk.Frame):
             pass
         elif action == ItemActions.DROP.action:
             # Remove the item from inventory and update UI
+            self.play_sfx(build_sound_path(Sfx.DROP), 1000)
             self.hero.inventory.pop(index)
             frame_to_remove = self.item_frames.pop(index)
             frame_to_remove.destroy()
@@ -360,6 +356,7 @@ class RPGGame(tk.Frame):
 
         # Highlight the current item
         if self.currently_highlighted_index is not None:
+            self.play_sfx(build_sound_path(Sfx.SELECTOR), 1000)
             current_frame = self.item_frames[self.currently_highlighted_index]
             current_frame.configure(highlightbackground='blue')
             current_frame.configure(highlightthickness=2)
@@ -387,3 +384,12 @@ class RPGGame(tk.Frame):
             item.use_function(self.hero)  # Assuming the function expects a hero as an argument
             self.hero.inventory.remove(item)  # Remove the used items from inventory
             self.inventory()
+
+
+def build_sound_path(sound_enum_value):
+    if isinstance(sound_enum_value, Sfx):
+        return f"{SoundPaths.SFX.path}{sound_enum_value.sfx_file}"
+    elif isinstance(sound_enum_value, MusicTrack):
+        return f"{SoundPaths.MUSIC.path}{sound_enum_value.track_file}"
+    else:
+        raise ValueError(f"Unknown sound enum type: {sound_enum_value}")

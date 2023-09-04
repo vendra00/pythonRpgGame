@@ -78,6 +78,28 @@ class ItemTier(Enum):
     TIER_5 = ("Tier 5", 5),
 
 
+class ItemSlot(Enum):
+    HEAD = auto()
+    CHEST = auto()
+    LEGS = auto()
+    FEET = auto()
+    HANDS = auto()
+    SHOULDERS = auto()
+    RING = auto()
+    NECK = auto()
+    BELT = auto()
+    CAPE = auto()
+    CLOAK = auto()
+    BRACERS = auto()
+    EARRINGS = auto()
+    MAIN_HAND = auto()
+    OFF_HAND = auto()
+    TWO_HAND = auto()
+
+    def __init__(self, slot):
+        self.slot = slot
+
+
 class Effects(Enum):
     POISON = auto()
     BURN = auto()
@@ -155,3 +177,39 @@ class KeyBindings(Enum):
 
     def __init__(self, key):
         self.key = key
+
+
+class BaseMovementCoordinates(Enum):
+    UP = (0, -1)
+    DOWN = (0, 1)
+    LEFT = (-1, 0)
+    RIGHT = (1, 0)
+
+    def __init__(self, dx, dy):
+        self.coordinate = (dx, dy)
+
+
+class Sfx(Enum):
+    WALK = "walk.mp3"
+    PICK_UP = "pick_up_item.mp3"
+    DROP = "drop_item.mp3"
+    SELECTOR = "selector.mp3"
+
+    def __init__(self, sfx):
+        self.sfx_file = sfx
+
+
+class MusicTrack(Enum):
+    FORREST = "forrest.mp3"
+
+    def __init__(self, track):
+        self.track_file = track
+
+
+class SoundPaths(Enum):
+    SFX = (Sfx, "audio/sfx/")
+    MUSIC = (MusicTrack, "audio/track/")
+
+    def __init__(self, sound_enum, path):
+        self.sound_enum = sound_enum
+        self.path = path
