@@ -5,13 +5,15 @@ from typing import List, Union
 import pygame
 from PIL import Image, ImageTk
 
-from service import hero_service
 from model.characters import Hero, TILE_SIZE, MAP_SIZE
-from service.draw_element_service import draw_map
-from utils.enums import ItemActions, MapElements, KeyBindings, BaseMovementCoordinates, SoundPaths, Sfx, MusicTrack
 from model.environment import TreasureChest, Tree, Wall
+from service import hero_service
+from service.draw_element_service import draw_map
 from service.inventory_service import InventoryService
 from service.item_service import ItemService
+from service.sound_service import build_sound_path
+from utils.enums import ItemActions, MapElements, KeyBindings, BaseMovementCoordinates, Sfx, MusicTrack, \
+    GameActions
 
 
 class RPGGame(tk.Frame):
@@ -141,7 +143,6 @@ class RPGGame(tk.Frame):
             self.map[new_y][new_x] = '.'
 
             # Play the pickup sound effect
-            print(Sfx.PICK_UP)
             self.play_sfx(build_sound_path(Sfx.PICK_UP), 1000)
 
     def move(self, direction, event=None):
@@ -181,16 +182,16 @@ class RPGGame(tk.Frame):
         menu_frame = tk.Frame(self)
         menu_frame.grid(row=0, column=0, padx=10, pady=10)
 
-        self.explore_button = tk.Button(menu_frame, text="Explore", command=self.explore)
+        self.explore_button = tk.Button(menu_frame, text=GameActions.EXPLORE.action, command=self.explore)
         self.explore_button.pack(pady=5)
 
-        self.battle_button = tk.Button(menu_frame, text="Battle", command=self.battle)
+        self.battle_button = tk.Button(menu_frame, text=GameActions.BATTLE.action, command=self.battle)
         self.battle_button.pack(pady=5)
 
-        self.inventory_button = tk.Button(menu_frame, text="Inventory", command=self.inventory)
+        self.inventory_button = tk.Button(menu_frame, text=GameActions.INVENTORY.action, command=self.inventory)
         self.inventory_button.pack(pady=5)
 
-        self.exit_button = tk.Button(menu_frame, text="Exit", command=self.master.quit)
+        self.exit_button = tk.Button(menu_frame, text=GameActions.EXIT.action, command=self.master.quit)
         self.exit_button.pack(pady=5)
 
         # Map Block
@@ -201,16 +202,20 @@ class RPGGame(tk.Frame):
         directional_frame = tk.Frame(self)
         directional_frame.grid(row=0, column=2, padx=10, pady=10)
 
-        self.up_button = tk.Button(directional_frame, text="UP", command=self.move_up, **style_args)
+        self.up_button = tk.Button(directional_frame, text=GameActions.UP.action, command=self.move_up,
+                                   **style_args)
         self.up_button.grid(row=0, column=1, pady=5)
 
-        self.left_button = tk.Button(directional_frame, text="LEFT", command=self.move_left, **style_args)
+        self.left_button = tk.Button(directional_frame, text=GameActions.LEFT.action, command=self.move_left,
+                                     **style_args)
         self.left_button.grid(row=1, column=0, padx=5, pady=5)
 
-        self.right_button = tk.Button(directional_frame, text="RIGHT", command=self.move_right, **style_args)
+        self.right_button = tk.Button(directional_frame, text=GameActions.RIGHT.action, command=self.move_right,
+                                      **style_args)
         self.right_button.grid(row=1, column=2, padx=5, pady=5)
 
-        self.down_button = tk.Button(directional_frame, text="DOWN", command=self.move_down, **style_args)
+        self.down_button = tk.Button(directional_frame, text=GameActions.DOWN.action, command=self.move_down,
+                                     **style_args)
         self.down_button.grid(row=2, column=1, pady=5)
 
     @staticmethod
@@ -226,9 +231,8 @@ class RPGGame(tk.Frame):
         # Create a new window for the inventory
         inventory_window = tk.Toplevel(self)
         inventory_window.title("Inventory")
-        inventory_window.bind(KeyBindings.UP.key, self.navigate_inventory_up)
-        inventory_window.bind(KeyBindings.DOWN.key, self.navigate_inventory_down)
-        inventory_window.bind(KeyBindings.CLOSE.key, lambda e: inventory_window.destroy())
+        self.inventory_key_binding(inventory_window)
+
         inventory_window.focus_set()
 
         # Retrieve detailed descriptions for each items
@@ -239,7 +243,13 @@ class RPGGame(tk.Frame):
         # If the inventory is empty
         self.display_empty_inventory_message(inventory_window)
 
+        # Initially highlight the first item if there are any items
         self.highlight_item()
+
+    def inventory_key_binding(self, inventory_window):
+        inventory_window.bind(KeyBindings.UP.key, self.navigate_inventory_up)
+        inventory_window.bind(KeyBindings.DOWN.key, self.navigate_inventory_down)
+        inventory_window.bind(KeyBindings.CLOSE.key, lambda e: inventory_window.destroy())
 
     def display_empty_inventory_message(self, inventory_window):
         if not self.hero.inventory:
@@ -385,11 +395,3 @@ class RPGGame(tk.Frame):
             self.hero.inventory.remove(item)  # Remove the used items from inventory
             self.inventory()
 
-
-def build_sound_path(sound_enum_value):
-    if isinstance(sound_enum_value, Sfx):
-        return f"{SoundPaths.SFX.path}{sound_enum_value.sfx_file}"
-    elif isinstance(sound_enum_value, MusicTrack):
-        return f"{SoundPaths.MUSIC.path}{sound_enum_value.track_file}"
-    else:
-        raise ValueError(f"Unknown sound enum type: {sound_enum_value}")
