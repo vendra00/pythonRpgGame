@@ -156,6 +156,21 @@ class ItemActions(Enum):
         self.action = action
 
 
+class GameActions(Enum):
+    BATTLE = "Battle"
+    MOVE = "Move"
+    INVENTORY = "Inventory"
+    EXPLORE = "Explore"
+    EXIT = "Exit"
+    UP = "Up"
+    DOWN = "Down"
+    LEFT = "Left"
+    RIGHT = "Right"
+
+    def __init__(self, action):
+        self.action = action
+
+
 class MapElements(Enum):
     HERO = "hero"
     WALL = "wall"
