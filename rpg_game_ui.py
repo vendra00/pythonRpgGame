@@ -5,14 +5,15 @@ from typing import List, Union
 import pygame
 from PIL import Image, ImageTk
 
-from service import hero_service
 from model.characters import Hero, TILE_SIZE, MAP_SIZE
-from service.draw_element_service import draw_map
-from utils.enums import ItemActions, MapElements, KeyBindings, BaseMovementCoordinates, SoundPaths, Sfx, MusicTrack, \
-    GameActions
 from model.environment import TreasureChest, Tree, Wall
+from service import hero_service
+from service.draw_element_service import draw_map
 from service.inventory_service import InventoryService
 from service.item_service import ItemService
+from service.sound_service import build_sound_path
+from utils.enums import ItemActions, MapElements, KeyBindings, BaseMovementCoordinates, Sfx, MusicTrack, \
+    GameActions
 
 
 class RPGGame(tk.Frame):
@@ -142,7 +143,6 @@ class RPGGame(tk.Frame):
             self.map[new_y][new_x] = '.'
 
             # Play the pickup sound effect
-            print(Sfx.PICK_UP)
             self.play_sfx(build_sound_path(Sfx.PICK_UP), 1000)
 
     def move(self, direction, event=None):
@@ -395,11 +395,3 @@ class RPGGame(tk.Frame):
             self.hero.inventory.remove(item)  # Remove the used items from inventory
             self.inventory()
 
-
-def build_sound_path(sound_enum_value):
-    if isinstance(sound_enum_value, Sfx):
-        return f"{SoundPaths.SFX.path}{sound_enum_value.sfx_file}"
-    elif isinstance(sound_enum_value, MusicTrack):
-        return f"{SoundPaths.MUSIC.path}{sound_enum_value.track_file}"
-    else:
-        raise ValueError(f"Unknown sound enum type: {sound_enum_value}")
