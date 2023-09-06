@@ -228,3 +228,44 @@ class SoundPaths(Enum):
     def __init__(self, sound_enum, path):
         self.sound_enum = sound_enum
         self.path = path
+
+
+class MonsterType(Enum):
+    GOBLIN = ("Goblin", "./images/characters/enemy/goblin.png")
+    ORC = ("Orc", "./images/characters/enemy/orc.png")
+    DRAGON = ("Dragon", "./images/characters/enemy/dragon.png")
+    TROLL = ("Troll", "./images/characters/enemy/troll.png")
+    WITCH = ("Witch", "./images/characters/enemy/witch.png")
+
+    def __new__(cls, monster_name, image_path):
+        member = object.__new__(cls)
+        member._value_ = monster_name
+        member.image_path = image_path
+        return member
+
+    @property
+    def name(self):
+        return self._name_
+
+    @property
+    def value(self):
+        return self._value_
+
+
+class HeroesType(Enum):
+    MALE = ("Sir lancelot", "./images/characters/heroes/default.png")
+    FEMALE = ("Lady Joan", "./images/characters/heroes/hero.png")
+
+    def __new__(cls, monster_name, image_path):
+        member = object.__new__(cls)
+        member._value_ = monster_name
+        member.image_path = image_path
+        return member
+
+    @property
+    def name(self):
+        return self._name_
+
+    @property
+    def value(self):
+        return self._value_

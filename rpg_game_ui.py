@@ -5,6 +5,7 @@ from typing import List, Union
 import pygame
 from PIL import Image, ImageTk
 
+from model.base_attributes import BaseAttributes
 from model.characters import Hero, TILE_SIZE, MAP_SIZE
 from model.environment import TreasureChest, Tree, Wall
 from service import hero_service
@@ -85,7 +86,29 @@ class RPGGame(tk.Frame):
 
     def initialize_attributes(self):
         """ Initialize class attributes """
-        self.hero = Hero(name="Sir Lancelot")
+        # Initial base attributes for our hero, Sir Lancelot
+        sir_lancelot_attributes = BaseAttributes(
+            strength=10,
+            dexterity=10,
+            constitution=10,
+            intelligence=10,
+            wisdom=10,
+            charisma=10
+        )
+
+        self.hero = Hero(
+            name="Sir Lancelot",
+            base_attributes=sir_lancelot_attributes,
+            hp=100,
+            mana=50,
+            xp=0,
+            level=1,
+            attack=10,
+            defense=5,
+            position=(MAP_SIZE // 2, MAP_SIZE // 2),
+            inventory=[],  # start with empty inventory
+            equipment={}  # start with no equipment
+        )
         self.map: List[List[Union[str, Hero]]] = [['.' for _ in range(MAP_SIZE)] for _ in range(MAP_SIZE)]
         self.elements = {MapElements.HERO.element: self.hero}
 
@@ -235,7 +258,7 @@ class RPGGame(tk.Frame):
 
         inventory_window.focus_set()
 
-        # Retrieve detailed descriptions for each items
+        # Retrieve detailed descriptions for each item
         item_descriptions = InventoryService.list_items(self.hero.inventory)
 
         self.iterate_inventory(inventory_window, item_descriptions)
@@ -311,7 +334,7 @@ class RPGGame(tk.Frame):
         drop_button.pack(side=tk.RIGHT, padx=5)
 
     def perform_item_action(self, action, index):
-        item = self.hero.inventory[index]
+        #  item = self.hero.inventory[index]
         if action == ItemActions.USE.action:
             # Use item
             pass
@@ -394,4 +417,3 @@ class RPGGame(tk.Frame):
             item.use_function(self.hero)  # Assuming the function expects a hero as an argument
             self.hero.inventory.remove(item)  # Remove the used items from inventory
             self.inventory()
-

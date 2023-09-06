@@ -39,7 +39,7 @@ def level_up(hero):
 
 def move_hero(hero, current_map, dx, dy, check_item_pick_up, check_map_collision, play_sfx):
     new_x, new_y = hero.position[0] + dx, hero.position[1] + dy
-    updated_map = check_map_collision(hero, new_x, new_y, current_map)  # Pass the current_map here
+    check_map_collision(hero, new_x, new_y, current_map)
     check_item_pick_up(new_x, new_y)
     play_sfx('audio/sfx/walk.mp3', 1000)
 
