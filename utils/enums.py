@@ -209,6 +209,7 @@ class Sfx(Enum):
     PICK_UP = "pick_up_item.mp3"
     DROP = "drop_item.mp3"
     SELECTOR = "selector.mp3"
+    BUMP = "bump.wav"
 
     def __init__(self, sfx):
         self.sfx_file = sfx

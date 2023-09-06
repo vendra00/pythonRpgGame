@@ -355,7 +355,8 @@ class RPGGame(tk.Frame):
                 for child in frame.winfo_children():
                     if isinstance(child, tk.Button):
                         action_name = child.cget("text")
-                        child.config(command=lambda action=action_name, idx=idx: self.perform_item_action(action, idx))
+                        child.config(command=lambda button_action=action_name, button_idx=idx: self.perform_item_action(
+                            button_action, button_idx))
 
     def navigate_inventory_up(self, event=None):
         # Reduce the index

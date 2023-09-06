@@ -1,3 +1,7 @@
+from service.sound_service import build_sound_path
+from utils.enums import Sfx
+
+
 def hero_attack(hero, enemy):
     damage = hero.atk - enemy.defense
     if damage > 0:
@@ -37,11 +41,15 @@ def level_up(hero):
     return f"{hero.name} leveled up to Level {hero.level}!"
 
 
-def move_hero(hero, current_map, dx, dy, check_item_pick_up, check_map_collision, play_sfx):
+def move_hero(hero, current_map, dx, dy, check_item_pick_up, map_collision, play_sfx):
     new_x, new_y = hero.position[0] + dx, hero.position[1] + dy
-    check_map_collision(hero, new_x, new_y, current_map)
-    check_item_pick_up(new_x, new_y)
-    play_sfx('audio/sfx/walk.mp3', 1000)
+
+    if 0 <= new_x < len(current_map[0]) and 0 <= new_y < len(current_map):
+        map_collision(hero, new_x, new_y, current_map)
+        check_item_pick_up(new_x, new_y)
+        play_sfx(build_sound_path(Sfx.WALK), 1000)
+    else:
+        play_sfx(build_sound_path(Sfx.BUMP), 1000)
 
 
 def check_map_collision(hero, new_x, new_y, current_map):
