@@ -254,8 +254,8 @@ class MonsterType(Enum):
 
 
 class HeroesType(Enum):
-    MALE = ("Sir lancelot", "./images/characters/heroes/default.png")
-    FEMALE = ("Lady Joan", "./images/characters/heroes/hero.png")
+    MALE = ("Sir Lancelot", "./images/characters/heroes/hero_male.png")
+    FEMALE = ("Lady Joan", "./images/characters/heroes/hero_female.png")
 
     def __new__(cls, monster_name, image_path):
         member = object.__new__(cls)

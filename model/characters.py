@@ -3,7 +3,7 @@ from typing import List, Dict, Optional
 
 from model.base_attributes import BaseAttributes
 from model.items import Item
-from utils.enums import ItemSlot, MonsterType
+from utils.enums import ItemSlot, MonsterType, HeroesType
 
 TILE_SIZE = 60
 MAP_SIZE = 10
@@ -28,7 +28,7 @@ class Hero(Character):
     element_id: str = 'hero'
     inventory: List[Item] = field(default_factory=list)
     equipment: Dict[ItemSlot, Item] = field(default_factory=dict)
-    image_path: str = './images/characters/heroes/hero.png'
+    image_path: str = HeroesType.MALE.image_path
 
 
 @dataclass(frozen=False)
