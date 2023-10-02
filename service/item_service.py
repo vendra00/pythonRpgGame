@@ -22,7 +22,7 @@ class ItemService:
         # Extract the class reference and then remove it from the dictionary
         item_class = combined_attributes.pop('class')
 
-        # Assign the class name to the 'name' attribute if it's still the default
+        # Assign the class name to the 'name' attribute if it' foods still the default
         if combined_attributes['name'] == 'Default Name':
             combined_attributes['name'] = item_class.__name__
 

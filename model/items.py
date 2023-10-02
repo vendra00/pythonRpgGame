@@ -1,7 +1,7 @@
 from abc import ABC
 from dataclasses import dataclass
 
-from utils.enums import Rarity, Effects, AmmoType
+from utils.enums import Rarity, Effects, AmmoType, BladeImgPaths, BluntImgPaths, RangedImgPaths, PolearmsImgPaths
 
 
 @dataclass
@@ -62,7 +62,7 @@ class Blade(Weapon, ABC):
 
     def __post_init__(self):
         if not self.thumbnail_path:
-            self.thumbnail_path = '../images/thumbnails/blade.jpg'
+            self.thumbnail_path = BladeImgPaths.THUMBNAIL.value.path
 
     def sharpen(self):
         pass
@@ -77,7 +77,7 @@ class Blunt(Weapon, ABC):
 
     def __post_init__(self):
         if not self.thumbnail_path:
-            self.thumbnail_path = '../images/thumbnails/blunt.png'
+            self.thumbnail_path = self.thumbnail_path = BluntImgPaths.THUMBNAIL.value.path
 
     def bludgeon(self):
         pass
@@ -89,7 +89,7 @@ class Ranged(Weapon, ABC):
 
     def __post_init__(self):
         if not self.thumbnail_path:
-            self.thumbnail_path = '../images/thumbnails/ranged.png'
+            self.thumbnail_path = self.thumbnail_path = RangedImgPaths.THUMBNAIL.value.path
 
     def shoot(self):
         pass
@@ -107,7 +107,7 @@ class Polearm(Weapon, ABC):
 
     def __post_init__(self):
         if not self.thumbnail_path:
-            self.thumbnail_path = '../images/thumbnails/polearm.png'
+            self.thumbnail_path = self.thumbnail_path = PolearmsImgPaths.THUMBNAIL.value.path
 
     def thrust(self):
         pass

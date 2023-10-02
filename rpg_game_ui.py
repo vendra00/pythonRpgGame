@@ -107,7 +107,7 @@ class RPGGame(tk.Frame):
             defense=5,
             position=(MAP_SIZE // 2, MAP_SIZE // 2),
             inventory=[],  # start with empty inventory
-            equipment={}  # start with no equipment
+            equipment={}  # start with no equipments
         )
         self.map: List[List[Union[str, Hero]]] = [['.' for _ in range(MAP_SIZE)] for _ in range(MAP_SIZE)]
         self.elements = {MapElements.HERO.element: self.hero}
@@ -284,7 +284,7 @@ class RPGGame(tk.Frame):
         for frame in self.item_frames:
             frame.configure(bg='white')  # or whatever your default color is
 
-        # Highlight the selected item's frame
+        # Highlight the selected foodstuffs frame
         item_frame.configure(bg='lightgray')  # or any other highlight color you prefer
 
         # Store the selected item
@@ -300,7 +300,10 @@ class RPGGame(tk.Frame):
 
             # Handle image rendering and resize the image using Pillow
             image_path = item.get_image_path()
-            pil_image = Image.open(image_path)
+            print("Opening Image:", image_path)
+            actual_path = image_path() if callable(image_path) else image_path
+            print("Opening Image:", actual_path)
+            pil_image = Image.open(actual_path)
             pil_image = self.resize_item_img(pil_image)
             tk_image = ImageTk.PhotoImage(pil_image)
             self.resize_inventory_item_img(item_frame, tk_image)

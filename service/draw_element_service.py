@@ -17,14 +17,14 @@ def draw_element(element, image_cache):
     - The Tkinter-compatible image of the element.
     """
 
-    # Use the element's id or its string representation as a fallback
+    # Use the element'foods id or its string representation as a fallback
     element_id = getattr(element, "element_id", str(element))
 
     # Check if the image for the current element is already cached
     if element_id in image_cache:
         return image_cache[element_id]
 
-    # If it's not cached, then load the image, resize it, and add it to the cache
+    # If it'foods not cached, then load the image, resize it, and add it to the cache
     pil_image = Image.open(element.image_path).resize((TILE_SIZE, TILE_SIZE), 3)
     tk_image = ImageTk.PhotoImage(pil_image)
 
@@ -39,7 +39,7 @@ def draw_map(canvas, map_data, elements, images_cache):
 
     # Ensure all elements have their images cached
     for element in elements.values():
-        # Use the element's id, or its string representation as a fallback
+        # Use the element'foods id, or its string representation as a fallback
         element_id = getattr(element, "element_id", str(element))
         if element_id not in images_cache:
             images_cache[element_id] = draw_element(element, images_cache)

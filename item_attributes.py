@@ -1,4 +1,5 @@
-from utils.enums import Weapons, AmmoType, Rarity
+from utils.enums import Weapons, AmmoType, Rarity, SwordsImgPaths, AxesImgPaths, ShieldImgPaths, BowsImgPaths, \
+    MacesImgPaths, DaggersImgPaths, StavesImgPaths, WandImgPaths, CrossBowsImgPaths, HalberdsImgPaths, WarHammerImgPaths
 from model.items import Sword, Axe, Shield, Bow, Mace, Dagger, Staff, Wand, Crossbow, Halberd, Hammer
 
 
@@ -14,7 +15,7 @@ ITEM_ATTRIBUTES = {
     Weapons.SWORD: {
         "class": Sword,
         "value": 35,
-        "image_path": './images/items/weapons/sword.png',
+        "image_path": lambda: SwordsImgPaths.DEFAULT.value.path,
         "slot": 'main_hand',
         "attack_power": 10,
         "defense_power": 5,
@@ -25,7 +26,7 @@ ITEM_ATTRIBUTES = {
     Weapons.AXE: {
         "class": Axe,
         "value": 40,
-        "image_path": './images/items/weapons/axe.png',
+        "image_path": lambda: AxesImgPaths.DEFAULT.value.path,
         "slot": 'main_hand',
         "attack_power": 12,
         "defense_power": 4,
@@ -36,7 +37,7 @@ ITEM_ATTRIBUTES = {
     Weapons.SHIELD: {
         "class": Shield,
         "value": 30,
-        "image_path": './images/items/weapons/shield.jpg',
+        "image_path": lambda: ShieldImgPaths.DEFAULT.value,
         "slot": 'off_hand',
         "attack_power": 0,
         "defense_power": 10,
@@ -47,7 +48,7 @@ ITEM_ATTRIBUTES = {
     Weapons.BOW: {
         "class": Bow,
         "value": 45,
-        "image_path": './images/items/weapons/bow.png',
+        "image_path": lambda: BowsImgPaths.DEFAULT.value,
         "slot": 'main_hand',
         "attack_power": 8,
         "defense_power": 2,
@@ -57,7 +58,7 @@ ITEM_ATTRIBUTES = {
     Weapons.MACE: {
         "class": Mace,
         "value": 40,
-        "image_path": './images/items/weapons/mace.png',
+        "image_path": lambda: MacesImgPaths.DEFAULT.value.path,
         "slot": 'main_hand',
         "attack_power": 12,
         "defense_power": 2,
@@ -68,7 +69,7 @@ ITEM_ATTRIBUTES = {
     Weapons.DAGGER: {
         "class": Dagger,
         "value": 25,
-        "image_path": './images/items/weapons/dagger.png',
+        "image_path": lambda: DaggersImgPaths.DEFAULT.value.path,
         "slot": 'main_hand',
         "attack_power": 7,
         "defense_power": 3,
@@ -79,7 +80,7 @@ ITEM_ATTRIBUTES = {
     Weapons.STAFF: {
         "class": Staff,
         "value": 25,
-        "image_path": './images/items/weapons/staff.jpg',
+        "image_path": lambda: StavesImgPaths.DEFAULT.value.path,
         "slot": 'main_hand',
         "attack_power": 5,
         "defense_power": 3,
@@ -89,7 +90,7 @@ ITEM_ATTRIBUTES = {
     Weapons.WAND: {
         "class": Wand,
         "value": 30,
-        "image_path": './images/items/weapons/wand.png',
+        "image_path": lambda: WandImgPaths.DEFAULT.value.path,
         "slot": 'main_hand',
         "attack_power": 8,
         "defense_power": 1,
@@ -99,7 +100,7 @@ ITEM_ATTRIBUTES = {
     Weapons.CROSSBOW: {
         "class": Crossbow,
         "value": 50,
-        "image_path": './images/items/weapons/crossbow.png',
+        "image_path": lambda: CrossBowsImgPaths.DEFAULT.value.path,
         "slot": 'main_hand',
         "attack_power": 14,
         "defense_power": 3,
@@ -110,7 +111,7 @@ ITEM_ATTRIBUTES = {
     Weapons.HALBERD: {
         "class": Halberd,
         "value": 50,
-        "image_path": './images/items/weapons/halberd.jpg',
+        "image_path": lambda: HalberdsImgPaths.DEFAULT.value.path,
         "slot": 'main_hand',
         "attack_power": 16,
         "defense_power": 4,
@@ -120,7 +121,7 @@ ITEM_ATTRIBUTES = {
     Weapons.HAMMER: {
         "class": Hammer,
         "value": 45,
-        "image_path": './images/items/weapons/hammer.png',
+        "image_path": lambda: WarHammerImgPaths.DEFAULT.value.path,
         "slot": 'main_hand',
         "attack_power": 14,
         "defense_power": 5,

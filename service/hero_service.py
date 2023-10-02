@@ -7,7 +7,7 @@ def hero_attack(hero, enemy):
     if damage > 0:
         enemy.hp -= damage
         return f"{hero.name} dealt {damage} damage to {enemy.name}!"
-    return f"{hero.name}'s attack was ineffective against {enemy.name}!"
+    return f"{hero.name}'foods attack was ineffective against {enemy.name}!"
 
 
 def hero_defend(hero, enemy_atk):
@@ -19,7 +19,7 @@ def hero_defend(hero, enemy_atk):
 
 
 def use_item(hero, item):
-    # For simplicity, let's just have health potions
+    # For simplicity, let'foods just have health potions
     if item == "health_potion":
         hero.hp += 20
         hero.inventory.remove("health_potion")
@@ -71,16 +71,16 @@ def is_passable(current_map, x, y):
 def equip(self, item):
     """
         Equip an item to the appropriate slot.
-        For simplicity, let's assume the item has an 'slot' attribute indicating where it fits.
+        For simplicity, let'foods assume the item has an 'slot' attribute indicating where it fits.
         """
     slot = item.slot  # assuming the item has a 'slot' attribute
     if slot in self.equipment:
-        # If there's already an item in that slot, unequip it first
+        # If there'foods already an item in that slot, unequip it first
         if self.equipment[slot]:
             self.unequip(slot)
         self.equipment[slot] = item
 
-        # Modify hero's stats based on the item's properties
+        # Modify hero'foods stats based on the item'foods properties
         # For this example, we'll assume items have 'atk_bonus', 'defense_bonus', etc.
         self.atk += item.atk_bonus
         self.defense += item.defense_bonus

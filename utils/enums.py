@@ -1,5 +1,7 @@
 from enum import Enum, auto
 
+from model.images import ImgPath
+
 
 class Weapons(Enum):
     AXE = auto()
@@ -204,6 +206,110 @@ class BaseMovementCoordinates(Enum):
         self.coordinate = (dx, dy)
 
 
+class SwordsImgPaths(Enum):
+    DEFAULT = ImgPath("sword", "/sword.png", "BladeTypesImgPaths")
+
+
+class AxesImgPaths(Enum):
+    DEFAULT = ImgPath("axe", "/axe.png", "BladeTypesImgPaths")
+
+
+class MacesImgPaths(Enum):
+    DEFAULT = ImgPath("mace", "/mace.png", "BluntImgPaths")
+
+
+class DaggersImgPaths(Enum):
+    DEFAULT = ImgPath("dagger", "/dagger.png", "BladeTypesImgPaths")
+
+
+class StavesImgPaths(Enum):
+    DEFAULT = ImgPath("staff", "/staff.png", "BluntImgPaths")
+
+
+class BowsImgPaths(Enum):
+    DEFAULT = ImgPath("bow", "/bow.png", "RangedImgPaths")
+
+
+class CrossBowsImgPaths(Enum):
+    DEFAULT = ImgPath("crossbow", "/crossbow.png", "RangedImgPaths")
+
+
+class BladeTypesImgPaths(Enum):
+    SWORDS = ImgPath("swords", "/swords", "BladeImgPaths")
+    DAGGERS = ImgPath("daggers", "/daggers", "BladeImgPaths")
+    AXES = ImgPath("axes", "/axes", "BladeImgPaths")
+
+
+class BladeImgPaths(Enum):
+    THUMBNAIL = ImgPath("blade", "blade.jpg")
+    TYPES = ImgPath("types", "/blades", "WeaponsImgPaths")
+
+
+class WarHammerImgPaths(Enum):
+    DEFAULT = ImgPath("war_hammer", "/war_hammer.png", "BluntImgPaths")
+
+
+class WandImgPaths:
+    DEFAULT = ImgPath("wand", "/wand.png", "BluntImgPaths")
+
+
+class HalberdsImgPaths(Enum):
+    DEFAULT = ImgPath("halberd", "/halberd.jpg", "PolearmsImgPaths")
+
+
+class BluntImgPaths(Enum):
+    THUMBNAIL = "blunt.png"
+    MACES = (MacesImgPaths, "/maces")
+    STAVES = (StavesImgPaths, "/staves")
+    WAR_HAMMERS = (WarHammerImgPaths, "/war_hammers")
+    WANDS = (WandImgPaths, "/wands")
+
+
+class PolearmsImgPaths(Enum):
+    THUMBNAIL = "polearm.png"
+    HALBERDS = (HalberdsImgPaths, "/halberds")
+
+
+class RangedImgPaths(Enum):
+    THUMBNAIL = "ranged.png"
+    BOWS = (BowsImgPaths, "/bows")
+    CROSSBOWS = (CrossBowsImgPaths, "/crossbows")
+
+
+class ShieldImgPaths(Enum):
+    DEFAULT = "shield.png"
+
+
+class WeaponsImgPaths(Enum):
+    BLADES = ImgPath("Blades", "/blades", "EquipmentPath")
+    BLUNTS = ImgPath("Blunts", "/blunts", "EquipmentPath")
+    POLEARMS = ImgPath("Polearms", "/polearms", "EquipmentPath")
+    RANGED = ImgPath("Ranged", "/ranged", "EquipmentPath")
+    SHIELDS = ImgPath("Shields", "/shields", "EquipmentPath")
+
+
+class ArmorImgPaths(Enum):
+    pass
+
+
+class AccessoriesImgPaths(Enum):
+    pass
+
+
+class ConsumablesImgPaths(Enum):
+    pass
+
+
+class EquipmentImgPath(Enum):
+    WEAPONS = ImgPath("Weapons", "/weapons", "ItemsImgPaths")
+    ARMOR = ImgPath("Armors", "/armors", "ItemsImgPaths")
+
+
+class ItemsImgPaths(Enum):
+    EQUIPMENT = ImgPath("Equipment", "./images/items/equipment")
+    CONSUMABLES = ImgPath("Consumables", "./images/items/consumables")
+
+
 class Sfx(Enum):
     WALK = "walk.mp3"
     PICK_UP = "pick_up_item.mp3"
@@ -270,3 +376,29 @@ class HeroesType(Enum):
     @property
     def value(self):
         return self._value_
+
+
+all_enums = {
+    "BladeTypesImgPaths": BladeTypesImgPaths,
+    "DaggersImgPaths": DaggersImgPaths,
+    "BladeImgPaths": BladeImgPaths,
+    "WeaponsImgPaths": WeaponsImgPaths,
+    "BluntImgPaths": BluntImgPaths,
+    "PolearmsImgPaths": PolearmsImgPaths,
+    "RangedImgPaths": RangedImgPaths,
+    "ShieldImgPaths": ShieldImgPaths,
+    "HalberdsImgPaths": HalberdsImgPaths,
+    "WarHammerImgPaths": WarHammerImgPaths,
+    "WandImgPaths": WandImgPaths,
+    "SwordsImgPaths": SwordsImgPaths,
+    "AxesImgPaths": AxesImgPaths,
+    "MacesImgPaths": MacesImgPaths,
+    "StavesImgPaths": StavesImgPaths,
+    "BowsImgPaths": BowsImgPaths,
+    "CrossBowsImgPaths": CrossBowsImgPaths,
+    "EquipmentImgPath": EquipmentImgPath,
+    "ItemsImgPaths": ItemsImgPaths,
+    "ConsumablesImgPaths": ConsumablesImgPaths,
+    "AccessoriesImgPaths": AccessoriesImgPaths,
+    "ArmorImgPaths": ArmorImgPaths,
+}
