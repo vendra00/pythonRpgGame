@@ -10,6 +10,6 @@ def main():
     app.mainloop()
 
 
-# This is the standard boilerplate that calls the main() function. 2
+# This is the standard boilerplate that calls the main() function. 32
 if __name__ == "__main__":
     main()
